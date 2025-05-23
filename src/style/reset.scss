@@ -18,7 +18,8 @@ html {
   background: rgb(248, 247, 247);
 }
 
-html, body {
+html,
+body {
   height: 100%;
   padding: 0;
   margin: 0;
@@ -239,7 +240,6 @@ button {
 @media (min-width: 1200px) {
 }
 
-
 /**自定义滚动条**/
 ::-webkit-scrollbar {
   width: 10px;
@@ -317,4 +317,14 @@ button {
 .scrollbar-hover:hover::-webkit-scrollbar-track,
 .scrollbar-hover:hover::-webkit-scrollbar-thumb {
   visibility: visible;
+}
+
+// element ui reset
+.el-button--primary.is-disabled,
+.el-button--primary.is-disabled:active,
+.el-button--primary.is-disabled:focus,
+.el-button--primary.is-disabled:hover {
+  color: #fff;
+  background-color: #8e8e93;
+  border-color: #8e8e93;
 }

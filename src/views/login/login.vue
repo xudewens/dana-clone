@@ -2,7 +2,7 @@
  * @Author: xiejun xiejun@keeprisk.com
  * @Date: 2025-05-22 15:04:20
  * @LastEditors: xiejun xiejun@keeprisk.com
- * @LastEditTime: 2025-05-22 18:49:06
+ * @LastEditTime: 2025-05-23 17:09:03
  * @FilePath: /dana-clone/src/views/minerMail/minerMail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -14,7 +14,7 @@
       </div>
       <div class="ipg-new__content">
         <div class="agreement__wrapper">
-          <div class="wrapper">
+          <div v-if="!this.$isMobile" class="wrapper">
             <div class="wrapper__step">
               <div class="wrapper__step__logo-container left-slide">
                 <img
@@ -104,30 +104,8 @@
                     />
                   </div>
                   <div class="country-code-wrapper"><span>+62</span></div>
-                  <div input="" class="input-phone-container">
-                    <label class="clearable-input desktop-input" value=""
-                      ><input
-                        format="{13}"
-                        placeholder="12312345678"
-                        maxlength="13"
-                        type="text"
-                        pattern="[0-9]*"
-                        class="txt-input-phone-number-field"
-                      />
-                      <!---->
-                    </label>
-                    <label class="clearable-input mobile-input" value=""
-                      ><input
-                        format="{13}"
-                        placeholder="12312345678"
-                        maxlength="13"
-                        type="text"
-                        pattern="[0-9]*"
-                        class="txt-input-phone-number-field"
-                      />
-                      <!---->
-                    </label>
-                  </div>
+                  <el-input placeholder="12312345678" v-model="input" clearable>
+                  </el-input>
                 </div>
                 <!---->
               </div>
@@ -191,20 +169,19 @@
                 </div>
               </div>
               <!---->
-              <div class="agreement__button">
+              <div v-if="!this.$isMobile" class="agreement__button">
                 <div class="agreement__button-info">
                   Your data is secured by DANA Protection.
                 </div>
-                <button
+                <el-button type="primary">CONTINUE</el-button>
+                <!-- <button
                   type="button"
                   class="btn-continue fs-unmask btn btn-primary"
                   disabled="disabled"
                 >
-                  CONTINUE
-                  <!---->
-                  <!---->
-                  <!---->
-                </button>
+                  
+                CONTINUE
+                </button> -->
                 <div
                   class="agreement__button-redirect btn-back-to-merchant"
                   style="display: none"
@@ -213,7 +190,10 @@
                 </div>
               </div>
             </main>
-            <div class="card-agreement__footer fs-unmask">
+            <div
+              v-if="!this.$isMobile"
+              class="card-agreement__footer fs-unmask"
+            >
               <div class="btn-wrapper">
                 <!---->
                 <!---->
@@ -242,21 +222,20 @@
             </div>
           </div>
           <!---->
-          <div class="sticky-button">
+          <div v-if="this.$isMobile" class="sticky-button">
             <div class="sticky-button__content">
               <div class="sticky-button__content__tnc">
                 Your data is secured by DANA Protection.
               </div>
-              <button
+              <el-button type="primary">CONTINUE</el-button>
+
+              <!-- <button
                 type="button"
                 class="btn-continue btn btn-primary"
                 disabled="disabled"
               >
                 CONTINUE
-                <!---->
-                <!---->
-                <!---->
-              </button>
+              </button> -->
               <div>
                 <div class="guest-checkout-footer">
                   <div class="dana-protection__wrapper">
@@ -284,27 +263,6 @@
               </div>
             </div>
           </div>
-          <!---->
-          <div class="f-sheet__revamp scroll-lock-body general-error-sheet">
-            <!----><!---->
-          </div>
-          <!---->
-          <div
-            class="f-sheet__revamp scroll-lock-body unregistered-number-sheet"
-          >
-            <!----><!---->
-          </div>
-          <div data-v-0b5e9f91="">
-            <div data-v-0b5e9f91="" class="f-dialog wrapper--desktop">
-              <!----><!---->
-            </div>
-            <div
-              data-v-0b5e9f91=""
-              class="f-sheet__revamp scroll-lock-body wrapper--mobile"
-            >
-              <!----><!---->
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -317,6 +275,12 @@ export default {};
 
 <style lang="scss" scoped>
 .na-login-page {
+  background-color: #fff;
+  ::v-deep .el-input__inner,
+  .el-input__inner:focus {
+    border: 1px solid #fff;
+  }
+
   .ipg-new__wrapper {
     background-image: url(https://a.m.dana.id/resource/imgs/ipg/dot-background.svg);
     background-repeat: no-repeat;
@@ -501,6 +465,39 @@ export default {};
                 line-height: 0.18rem;
                 font-weight: 600;
               }
+              .input-phone-wrapper {
+                align-items: center;
+                border: 0.01rem solid;
+                border-color: #dcdce2;
+                border-radius: 0.08rem;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                font-size: 0.18rem;
+                height: 0.48rem;
+                margin-top: 0.1rem;
+                width: 100%;
+              }
+              .country-flag-wrapper {
+                padding: 0.08rem;
+              }
+
+              .clearable-input {
+                position: relative;
+                width: 100%;
+              }
+              .country-code-wrapper {
+                border-left: 0.01rem solid #e3e3e3;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+              }
+              .input-phone-container {
+                color: #313131;
+                border: none;
+                height: 0.48rem;
+                width: 3rem;
+              }
             }
             .binding-feature-wrapper {
               margin: 0.16rem 16px 0 0;
@@ -595,6 +592,24 @@ export default {};
               align-items: center;
               display: flex;
               justify-content: space-between;
+              .help__button {
+                background: none;
+                border: 0.01rem solid #108ee9;
+                border-radius: 0.04rem;
+                color: #108ee9;
+                cursor: pointer;
+                font-size: 0.12rem;
+                font-weight: 600;
+                line-height: 0.16rem;
+                padding: 0.08rem;
+                width: 100%;
+              }
+              .help__icon {
+                display: inline-block;
+                height: 0.13rem;
+                width: 0.13rem;
+                vertical-align: text-top;
+              }
               .dana-protection__wrapper {
                 display: flex;
               }
@@ -620,6 +635,119 @@ export default {};
       background-size: cover;
       margin: 0 auto;
       min-height: 6.5rem;
+    }
+    .sticky-button__content {
+      background-color: #fff;
+      bottom: 0;
+      left: 0;
+      margin: 0 auto;
+      position: fixed;
+      padding: 0.16rem;
+      right: 0;
+      z-index: 99;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      flex-direction: column;
+      gap: 0.08rem;
+    }
+    .sticky-button__content__tnc {
+      color: #727272;
+      font-size: 0.12rem;
+      line-height: 0.16rem;
+      text-align: center;
+    }
+    // .sticky-button {
+    //   display: none;
+    // }
+  }
+  @media (min-width: 481px) {
+    // .sticky-button {
+    //   display: block;
+    // }
+    .agreement__phone-wrapper
+      .input-phone-wrapper
+      .input-phone-container
+      .mobile-input {
+      display: none;
+    }
+    .wrapper,
+    .agreement__button,
+    .agreement__footer {
+      display: none;
+    }
+  }
+  @media (max-width: 480px) {
+    .wrapper,
+    .agreement__button,
+    .agreement__footer {
+      display: none;
+    }
+    .mobile-overlap-background__top {
+      width: 100%;
+      min-height: 1.95rem;
+    }
+    .mobile-overlap-background {
+      z-index: 0;
+    }
+    .agreement__wrapper .card-agreement {
+      z-index: 10;
+      margin-top: -1.2rem;
+      width: calc(100vw - 0.24rem);
+    }
+    .card-agreement__guest-header .icon-dana {
+      height: 0.4rem;
+    }
+    .guest-checkout-footer {
+      align-items: center;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      justify-content: space-between;
+    }
+    .guest-checkout-footer .dana-protection__wrapper {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+    }
+    .guest-checkout-footer .dana-protection__text {
+      color: #727272;
+      font-size: 0.12rem;
+      font-weight: 600;
+      line-height: 0.16rem;
+    }
+    .guest-checkout-footer .dana-protection__img {
+      height: 0.19rem;
+      width: 1.2rem;
+    }
+    .guest-checkout-footer .help__button {
+      background: none;
+      border: 0.01rem solid #108ee9;
+      border-radius: 0.04rem;
+      color: #108ee9;
+      cursor: pointer;
+      font-size: 0.12rem;
+      font-weight: 600;
+      line-height: 0.16rem;
+      padding: 0.08rem;
+      width: 100%;
+    }
+    .guest-checkout-footer .help__icon {
+      height: 0.13rem;
+      width: 0.13rem;
+      vertical-align: text-top;
+      display: inline-block;
+    }
+    .card-agreement {
+      z-index: 10;
+      margin-top: -1.2rem;
+      width: calc(100vw - 0.24rem) !important;
+    }
+    .sticky-button__content__tnc {
+      color: #727272;
+      font-size: 0.12rem;
+      line-height: 0.16rem;
+      text-align: center;
     }
   }
 }
