@@ -8,6 +8,7 @@
  */
 // import Home from '../views/Home.vue';
 import orderStatus from '@/views/orderStatus/orderStatus.vue' // 注册
+import checkout from '@/views/orderStatus/checkout.vue' // 注册
 import IndexHome from '@/views/home/IndexHome.vue' // 首页
 import MinerMail from '@/views/minerMail/minerMail.vue' // 矿机商城
 
@@ -41,6 +42,14 @@ const routes = [{
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: orderStatus
+  },
+  {
+    path: '/checkout',
+    name: 'checkout',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: checkout
   },
   // 展示弹出框页面
   {

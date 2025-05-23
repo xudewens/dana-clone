@@ -28,7 +28,9 @@ import i18n from './i18n'; // 引入语言国际化设置
 
 // 换肤可以在此处引入不同的样式文件内容
 import './style/reset.scss'; // 引入部分 reset 样式内容
-
+import Footer from './components/footer.vue'
+Vue.component('Footer', Footer) // 全局国家选择组件
+Vue.use(Footer)
 // 引入 echarts
 import echarts from 'echarts';
 Vue.prototype.$echarts = echarts;
