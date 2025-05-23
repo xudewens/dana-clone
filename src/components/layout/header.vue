@@ -3,10 +3,12 @@
     <div class="header__header-box">
       <div class="header__container">
         <span class="content-left icon icon-logodana">
-          logo
-          <!-- <svg>
-            <use xlink:href="#icon-logodana"></use>
-          </svg> -->
+          <img
+            alt="logo-dana-protection"
+            style="width: 100%; height: 100%;"
+            src="../../assets/dana-icon/DANA.png"
+            class="logo"
+          />
         </span>
         <div class="content-right">
           <img
@@ -25,6 +27,7 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+
 .na-header-page {
   box-shadow: 0 0.02rem 0.12rem -0.02rem rgba(0, 0, 0, 0.16);
   position: relative;
@@ -62,7 +65,6 @@ export default {};
       width: 1.4rem;
     }
   }
-
   @media (max-width: 480px) {
     .na-header-page {
       box-shadow: none;

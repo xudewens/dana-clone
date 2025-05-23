@@ -7,7 +7,8 @@
  * @FilePath: /htmlTemplete/Users/jiwenjie/Desktop/codeWorkSpace/VsCodeSpace/do-it-myself/vue-project-base/src/router/router.config.js
  */
 // import Home from '../views/Home.vue';
-import orderStatus from '@/views/orderStatus/orderStatus.vue' // 订单状态页
+import orderStatus from '@/views/orderStatus/orderStatus.vue' // 注册
+import checkout from '@/views/orderStatus/checkout.vue' // 注册
 import IndexHome from '@/views/home/IndexHome.vue' // 首页
 import login from '@/views/login/login.vue' // 登录页
 
@@ -41,6 +42,14 @@ const routes = [{
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: orderStatus
+  },
+  {
+    path: '/checkout',
+    name: 'checkout',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: checkout
   },
   // 展示弹出框页面
   {
