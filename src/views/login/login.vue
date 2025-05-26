@@ -2,7 +2,7 @@
  * @Author: xiejun xiejun@keeprisk.com
  * @Date: 2025-05-22 15:04:20
  * @LastEditors: xiejun xiejun@keeprisk.com
- * @LastEditTime: 2025-05-23 17:09:03
+ * @LastEditTime: 2025-05-26 15:29:20
  * @FilePath: /dana-clone/src/views/minerMail/minerMail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -14,7 +14,7 @@
       </div>
       <div class="ipg-new__content">
         <div class="agreement__wrapper">
-          <div v-if="!this.$isMobile" class="wrapper">
+          <div class="wrapper">
             <div class="wrapper__step">
               <div class="wrapper__step__logo-container left-slide">
                 <img
@@ -169,7 +169,7 @@
                 </div>
               </div>
               <!---->
-              <div v-if="!this.$isMobile" class="agreement__button">
+              <div class="agreement__button">
                 <div class="agreement__button-info">
                   Your data is secured by DANA Protection.
                 </div>
@@ -190,10 +190,7 @@
                 </div>
               </div>
             </main>
-            <div
-              v-if="!this.$isMobile"
-              class="card-agreement__footer fs-unmask"
-            >
+            <div class="card-agreement__footer fs-unmask">
               <div class="btn-wrapper">
                 <!---->
                 <!---->
@@ -222,7 +219,7 @@
             </div>
           </div>
           <!---->
-          <div v-if="this.$isMobile" class="sticky-button">
+          <div class="sticky-button">
             <div class="sticky-button__content">
               <div class="sticky-button__content__tnc">
                 Your data is secured by DANA Protection.
@@ -247,7 +244,7 @@
                     />
                   </div>
                   <div class="help">
-                    <button class="btn-help help__button">
+                    <button class="btn-help help__button" @click="handleHelp">
                       HELP
                       <img
                         alt="help"
@@ -257,20 +254,33 @@
                     </button>
                   </div>
                 </div>
-                <div class="f-sheet__revamp scroll-lock-body help-sheet">
-                  <!----><!---->
-                </div>
+                <div class="f-sheet__revamp scroll-lock-body help-sheet"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <HelpDrawer ref="helpDrawerRef" type="help"> </HelpDrawer>
   </div>
 </template>
 
 <script>
-export default {};
+import HelpDrawer from "@/components/helpDrawer/index.vue";
+
+export default {
+  components: {
+    HelpDrawer,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    handleHelp() {
+      this.$refs.helpDrawerRef.showDrawer = true;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -657,31 +667,34 @@ export default {};
       line-height: 0.16rem;
       text-align: center;
     }
-    // .sticky-button {
-    //   display: none;
-    // }
-  }
-  @media (min-width: 481px) {
-    // .sticky-button {
-    //   display: block;
-    // }
-    .agreement__phone-wrapper
-      .input-phone-wrapper
-      .input-phone-container
-      .mobile-input {
-      display: none;
-    }
-    .wrapper,
-    .agreement__button,
-    .agreement__footer {
+    .sticky-button {
       display: none;
     }
   }
+  // @media (min-width: 481px) {
+  //   .sticky-button {
+  //     display: block;
+  //   }
+  //   .agreement__phone-wrapper
+  //     .input-phone-wrapper
+  //     .input-phone-container
+  //     .mobile-input {
+  //     display: none !important;
+  //   }
+  //   .wrapper,
+  //   .agreement__button,
+  //   .agreement__footer {
+  //     display: none !important;
+  //   }
+  // }
   @media (max-width: 480px) {
+    .sticky-button {
+      display: block !important;
+    }
     .wrapper,
     .agreement__button,
     .agreement__footer {
-      display: none;
+      display: none !important;
     }
     .mobile-overlap-background__top {
       width: 100%;

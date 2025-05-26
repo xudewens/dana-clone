@@ -1,3 +1,11 @@
+<!--
+ * @Author: xiejun xiejun@keeprisk.com
+ * @Date: 2025-05-23 18:29:22
+ * @LastEditors: xiejun xiejun@keeprisk.com
+ * @LastEditTime: 2025-05-23 18:29:55
+ * @FilePath: /dana-clone/src/components/layout/header.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <div class="na-header-page">
     <div class="header__header-box">
@@ -5,7 +13,7 @@
         <span class="content-left icon icon-logodana">
           <img
             alt="logo-dana-protection"
-            style="width: 100%; height: 100%;"
+            style="width: 100%; height: 100%"
             src="../../assets/dana-icon/DANA.png"
             class="logo"
           />
@@ -27,7 +35,6 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-
 .na-header-page {
   box-shadow: 0 0.02rem 0.12rem -0.02rem rgba(0, 0, 0, 0.16);
   position: relative;
@@ -43,7 +50,7 @@ export default {};
     position: relative;
     top: 0.21rem;
     width: 1rem;
-    background-color: aliceblue;
+    // background-color: aliceblue;
 
     // .icon{
     //     display: inline-block;
