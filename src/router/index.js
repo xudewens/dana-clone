@@ -16,8 +16,8 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   routes,
-  mode: "hash",
-  base: process.env.VUE_APP_CONTEXT
+  mode: "hash"
+  // base: process.env.VUE_APP_CONTEXT
 })
 
 // 全局前置钩子：beforeEach
