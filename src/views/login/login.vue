@@ -103,8 +103,23 @@
                       alt="idn-flag"
                     />
                   </div>
-                  <div class="country-code-wrapper"><span>+62</span></div>
-                  <el-input placeholder="12312345678" v-model="input" clearable>
+                  <div class="country-code-wrapper"><span style="padding-left: 6px;display: inline-block;">+62</span></div>
+                  <el-input  
+                  placeholder="12312345678"
+                  v-model="inputValue"
+                  @focus="handleFocus"
+                  @blur="handleBlur"
+                  clearable
+                  type="number"
+                  ref="mainInput">
+                      <!-- 解决部分机型数字键盘不唤起的兼容方案 -->
+                      <template #prefix>
+                        <input
+                        type="number"
+                        style="display: none;"
+                        ref="fakeInput"
+                        >
+                      </template>
                   </el-input>
                 </div>
                 <!---->
@@ -273,13 +288,52 @@ export default {
     HelpDrawer,
   },
   data() {
-    return {};
+    return {
+      inputValue:'',
+    };
+  },
+  mounted() {
+       // 监听全局点击事件（处理空白处失焦）
+       document.addEventListener('click', this.handleDocumentClick);
+  },
+  beforeUnmount() {
+    // 移除全局事件监听
+    document.removeEventListener('click', this.handleDocumentClick);
   },
   methods: {
     handleHelp() {
       this.$refs.helpDrawerRef.showDrawer = true;
     },
-  },
+    // 聚焦时处理
+    handleFocus() {
+      // 唤起数字键盘（强制触发假输入框聚焦）
+      this.$refs.fakeInput.focus();
+      // 延迟滚动（避免键盘遮挡导致滚动失效）
+      setTimeout(() => {
+        window.scrollBy(0, 50);
+      }, 100);
+    },
+
+    // 失焦时处理（包括主动失焦和空白点击）
+    handleBlur() {
+      // 先关闭键盘（确保键盘已收起）
+      this.$refs.mainInput.blur(); // 主动触发失焦
+      this.$refs.fakeInput.blur(); // 关闭假输入框键盘
+      
+      // 延迟滚动到顶部（等待键盘动画结束）
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 300); // 延迟时间需根据键盘动画时长调整（通常200-300ms）
+    },
+
+    // 空白处点击处理
+    handleDocumentClick(event) {
+      // 判断点击位置是否在输入框外
+      if (!this.$refs.mainInput.$el.contains(event.target)) {
+        this.handleBlur(); // 触发失焦逻辑
+      }
+    }
+  }
 };
 </script>
 
