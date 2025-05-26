@@ -78,7 +78,7 @@ svg:not(:root) {
     background-color: #108ee9;
     color: #fff;
     min-height: 2.8rem;
-    /* padding: .48rem 0 .28rem 1.65rem; */
+    padding: .48rem 0 .28rem 1.65rem;
 }
 
 .footer .left-content {
@@ -121,11 +121,11 @@ svg:not(:root) {
 }
 .footer .img-background {
     float: right;
-    height: 3.05rem;
+    height: 2.7rem;
     opacity: .3;
     -webkit-transform: translateX(.5rem) translateY(-.4rem);
     transform: translateX(.5rem) translateY(-.4rem);
-    width: 3.05rem;
+    width: 2.7rem;
 }
 .footer__notes {
     display: -webkit-box;

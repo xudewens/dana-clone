@@ -22,7 +22,7 @@ const port = process.env.VUE_APP_PORT || 80;
 
 module.exports = {
   // 站点根目录路径
-  publicPath: process.env.VUE_APP_CONTEXT,
+  publicPath: './',
 
   // 生产环境构建文件的目录
   outputDir: "dist",

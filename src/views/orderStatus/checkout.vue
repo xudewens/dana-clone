@@ -131,7 +131,7 @@
                 </div>
               </div>
               <div class="btn-container">
-                <button type="button" class="btn btn-primary btn-pay" disabled="disabled">PAY Rp20.000</button>
+                <button @click="drawer = !drawer" type="button" class="btn btn-primary btn-pay" >PAY Rp20.000</button>
               </div>
               <div class="f-sheet__revamp scroll-lock-body payment-confirmation-sheet"></div>
               <div class="modal-otp-limit"></div>
@@ -168,11 +168,60 @@
       </div>
       <Footer></Footer>
     </div>
+    <el-drawer
+        title="我是标题"
+        :visible.sync="drawer"
+        direction="btt"
+        :with-header="false"
+        size="80%">
+        <div class="payment-modifier-carddialog wrapper-card-titledialog">
+            <div class="card-title">
+            <img alt="dana-protection" src="https://a.m.dana.id/resource/imgs/ipg/dana-protection-logo-small.svg" class="card-title__dana-protection">
+            <div class="card-title__title-wrapper">
+                <span class="card-title__dana-logo icon icon-dana">
+                    <svg>
+                    <!-- <use xlink:href="#icon-dana"></use> -->
+                    </svg>
+                </span>
+                <div class="card-title__text"> PAY </div>
+            </div>
+        </div>
+        <div class="card-sub-title">
+            <p>Payment Confirmation</p>
+        </div>
+        <div class="statusImg centstyle">
+            <img v-if="type==='success'" src="../../assets/dana-icon/success.png" alt="">
+            <img v-else src="../../assets/dana-icon/failed.png" alt="">
+        </div>
+        <div class="successText centstyle">
+            Send Money to
+        </div>
+        <div class="infoText centstyle">TOBA JAYA BERSAMA PT·BCA丨***1999</div>
+        <div class="money centstyle">Rp 10.000</div>
+        <div v-if="type==='success'" class="share centstyle">
+            <el-button round icon="el-icon-upload2" class="sharebtn">SHARE</el-button>
+        </div>
+        <div v-else class="infoText" style="text-align: center;font-size: .13rem;padding: .1rem .2rem;">Sorry, your payment is declined for security reasons.Please try another payment method or contactcustomer service for help.</div>
+        <div class="fotbtn">
+            <div v-if="type==='success'" class="text">You can check the details in Transaction History</div>
+            <div class="btn">
+                <el-button class="closebtn" style="width: 45%;" plain>COLSE</el-button>
+                <el-button class="backbtn" style="width: 45%;" plain>BACK</el-button>
+            </div>
+        </div>
+    </div>
+    </el-drawer>
   </div>
+
 </template>
 <script>
 export default {
-
+    data() {
+        return {
+            drawer: false,
+            type:'faild'
+        }
+    },
 }
 </script>
 
@@ -186,6 +235,10 @@ export default {
     background-size: cover;
     margin: 0 auto;
     min-height: 6.5rem;
+}
+::v-deep .el-drawer__body {
+    border-radius: 0.12rem 0.12rem 0 0 !important;
+      background-color: #108ee9;
 }
 .ipg-new__content {
     display: -webkit-box;
@@ -722,6 +775,142 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
     display: flex;
     margin: .32rem 0;
 }
+.payment-modifier-card .wrapper-card-titledialog  {
+    display: inherit;
+    background-color: #108ee9;
+}
+.payment-modifier-carddialog {
+    position: relative;
+    height: 100%;
+    .centstyle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    }
+    .successText {
+        font-size: .28rem;
+        font-weight: 400;
+        color: #fff;
+    }
+    .infoText {
+        font-size: .16rem;
+        color: #fff;
+    }
+    .money {
+        font-size: .28rem;
+        color: #fff;
+    }
+    .share {
+        padding-top: .2rem;
+        .sharebtn {
+            background-color: #108ee9;
+            border-color: #fff;
+            color: #fff;
+        }
+    }
+    .fotbtn {
+        width: 100%;
+        padding: .14rem;
+        position: absolute;
+        bottom: 0;
+        background-color: #fff;
+        .text {
+            color: #a0a0a1;
+            font-size: .12rem;
+            text-align: center;
+            padding-bottom: .1rem;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .closebtn {
+            background-color: #fff;
+            border-color: #108ee9;
+            color: #108ee9;
+        }
+        .backbtn {
+            background-color: #108ee9;
+            border-color: #fff;
+            color: #fff;
+        }
+    }
+}
+
+.payment-modifier-carddialog .card-title{
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: .12rem .12rem 0 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: .44rem;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: .12rem .11rem;
+}
+.payment-modifier-carddialog .card-title__dana-protection {
+    display: initial;
+    height: .2rem;
+    width: .94rem;
+}
+.payment-modifier-carddialog .card-title>*  {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+.payment-modifier-carddialog .card-title__title-wrapper {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.payment-modifier-carddialog .card-title__dana-logo  {
+    margin-right: .02rem;
+    height: .18rem;
+    width: .18rem;
+}
+.payment-modifier-carddialog .card-title__text {
+    color: #108ee9;
+    font-size: .16rem;
+    font-weight: 700;
+}
+.payment-modifier-carddialog .card-title:after {
+    content: "";
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+.payment-modifier-carddialog .card-sub-title, .payment-modifier-carddialog .card-title__title-wrapper {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.payment-modifier-carddialog .card-sub-title{
+    // background-color: #108ee9;
+    color: #fff;
+    font-size: .14rem;
+    height: .42rem;
+    line-height: .18rem;
+    text-align: center;
+}
 @media (max-width: 1024px) {
     .footer {
         min-height: 4.5rem;
@@ -746,7 +935,7 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
         right: 0;
     }
     .payment-modifier-card {
-        margin: 0;
+        margin: .16rem .12rem;
     }
 }
 @media (max-width: 890px) {
@@ -755,6 +944,9 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
         -webkit-box-direction: normal;
         -ms-flex-direction: column;
         flex-direction: column;
+    }
+    .payment-modifier-card {
+        margin: .16rem .12rem;
     }
 }
 @media (max-width: 769px) {
@@ -786,6 +978,9 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
     }
     .payment-amount-wrapper {
       margin: 0;
+    }
+    .payment-modifier-card {
+        margin: .16rem 0rem;
     }
 }
 @media (max-width: 640px) {
@@ -860,11 +1055,11 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
         font-weight: 600;
         line-height: .24rem;
     }
-    .payment-modifier-card .wrapper-card-title {
+    .payment-modifier-card .wrapper-card-title  {
         display: inherit;
         background-color: #108ee9;
     }
-    .payment-modifier-card .card-title {
+    .payment-modifier-card .card-title{
         -webkit-box-align: center;
         -ms-flex-align: center;
         align-items: center;
@@ -928,7 +1123,7 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
         -ms-flex-pack: center;
         justify-content: center;
     }
-    .payment-modifier-card .card-sub-title {
+    .payment-modifier-card .card-sub-title{
         background-color: #108ee9;
         color: #fff;
         font-size: .14rem;
