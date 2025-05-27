@@ -2,7 +2,7 @@
  * @Author: xiejun xiejun@keeprisk.com
  * @Date: 2025-05-22 15:04:20
  * @LastEditors: xiejun xiejun@keeprisk.com
- * @LastEditTime: 2025-05-27 16:36:32
+ * @LastEditTime: 2025-05-27 22:06:02
  * @FilePath: /dana-clone/src/views/minerMail/minerMail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -93,10 +93,16 @@
               <!---->
               <!---->
               <div class="agreement__phone-wrapper">
-                <div class="input-phone-header" :class="{ 'error-msg': inputError }">
+                <div
+                  class="input-phone-header"
+                  :class="{ 'error-msg': inputError }"
+                >
                   Input your phone number as DANA ID
                 </div>
-                <div class="input-phone-wrapper" :class="{ 'error-msg': inputError }" >
+                <div
+                  class="input-phone-wrapper"
+                  :class="{ 'error-msg': inputError }"
+                >
                   <div class="country-flag-wrapper">
                     <img
                       src="https://a.m.dana.id/resource/imgs/ipg/idn-flag.svg"
@@ -104,7 +110,9 @@
                     />
                   </div>
                   <div class="country-code-wrapper">
-                    <span :class="{ 'error-msg': inputError }" style="padding-left: 6px; display: inline-block"
+                    <span
+                      :class="{ 'error-msg': inputError }"
+                      style="padding-left: 6px; display: inline-block"
                       >+62</span
                     >
                   </div>
@@ -129,7 +137,10 @@
                   </el-input>
                 </div>
                 <div class="input-phone-error" v-if="inputError">
-                  <img src="https://a.m.dana.id/resource/icons/info-red.svg" alt="info-red">
+                  <img
+                    src="https://a.m.dana.id/resource/icons/info-red.svg"
+                    alt="info-red"
+                  />
                   <span>Invalid phone number format. Please try again.</span>
                 </div>
                 <!---->
@@ -339,6 +350,7 @@
         </el-button>
       </div>
     </PinCodeDrawer>
+    <OtpDrawer></OtpDrawer>
     <Footer></Footer>
   </div>
 </template>
@@ -346,11 +358,13 @@
 <script>
 import PinCodeDrawer from "@/components/common/actionDrawer.vue";
 import HelpDrawer from "@/components/helpDrawer/index.vue";
+import OtpDrawer from "@/components/otpDrawer/index.vue";
 
 export default {
   components: {
     HelpDrawer,
     PinCodeDrawer,
+    OtpDrawer,
   },
   data() {
     return {
@@ -361,17 +375,13 @@ export default {
       hasMask: true,
       DrawerType: "help",
       inputError: false,
-      errorMessage: '',
+      errorMessage: "",
       // 正则表达式：第一位为8，总长度10-13位（符合印尼手机号格式）
-      phonePattern: '^8\\d{9,12}$',
+      phonePattern: "^8\\d{9,12}$",
     };
   },
-  mounted() {
-
-  },
-  beforeUnmount() {
-
-  },
+  mounted() {},
+  beforeUnmount() {},
   methods: {
     onInput(key) {
       this.password = (this.password + key).slice(0, 6);
@@ -390,7 +400,7 @@ export default {
     },
     mobileContinue() {
       if (this.inputError) {
-        return
+        return;
       }
       console.log(
         "%c [ 唤起弹窗 ]-311",
@@ -401,7 +411,7 @@ export default {
     },
     pcContinue() {
       if (this.inputError) {
-        return
+        return;
       }
       console.log(
         "%c [ 跳转pc pin码 ]-315",
@@ -412,29 +422,29 @@ export default {
       this.DrawerType = type;
       this.$refs.helpDrawerRef.showDrawer = true;
     },
-   // 实时验证手机号
-   validatePhone(value) {
+    // 实时验证手机号
+    validatePhone(value) {
       // 清理输入：只保留数字
-      let cleanedValue = value.replace(/\D/g, '');
-      
+      let cleanedValue = value.replace(/\D/g, "");
+
       // 限制长度不超过13位
       if (cleanedValue.length > 13) {
         cleanedValue = cleanedValue.substring(0, 13);
       }
-      
+
       // 更新输入值
       this.inputValue = cleanedValue;
-      
+
       // 验证正则
       const regex = new RegExp(this.phonePattern);
       if (cleanedValue && !regex.test(cleanedValue)) {
         // 提供详细的错误信息
-        if (cleanedValue[0] === '0') {
-          this.errorMessage = '第一位不能为0';
-        } else if (cleanedValue[0] !== '8') {
-          this.errorMessage = '印尼手机号需以8开头';
+        if (cleanedValue[0] === "0") {
+          this.errorMessage = "第一位不能为0";
+        } else if (cleanedValue[0] !== "8") {
+          this.errorMessage = "印尼手机号需以8开头";
         } else if (cleanedValue.length < 10) {
-          this.errorMessage = '长度至少10位';
+          this.errorMessage = "长度至少10位";
         }
         this.inputError = true;
       } else {
@@ -804,31 +814,31 @@ export default {
     }
     .error-msg,
     .error-msg ::v-deep .el-input .el-input__inner {
-        color: #ff5d55 !important;
+      color: #ff5d55 !important;
     }
     .error-msg.input-phone-wrapper {
       border-color: #ff5d55 !important;
     }
     .error-msg {
-        border-color: #ff5d55 !important;
+      border-color: #ff5d55 !important;
     }
     .agreement__phone-wrapper .input-phone-error {
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        color: #ff5d55;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        margin-top: .14rem;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      color: #ff5d55;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      margin-top: 0.14rem;
     }
     .agreement__phone-wrapper .input-phone-error img {
-        height: .2rem;
-        width: .2rem;
+      height: 0.2rem;
+      width: 0.2rem;
     }
     .agreement__phone-wrapper .input-phone-error span {
-        font-size: .12rem;
-        margin-left: .06rem;
+      font-size: 0.12rem;
+      margin-left: 0.06rem;
     }
     .ipg-new__wrapper {
       background-image: url(https://a.m.dana.id/resource/imgs/ipg/dot-background.svg);
@@ -897,16 +907,16 @@ export default {
     display: none;
   }
 
-/* 针对 Element UI 的输入框组件 */
-::v-deep .el-input input[type="number"]::-webkit-inner-spin-button,
-::v-deep .el-input input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-::v-deep .el-input .el-input__inner {
-  padding-left: 5px;         /* 文本颜色 */
-  font-size: 0.18rem;  
-}
+  /* 针对 Element UI 的输入框组件 */
+  ::v-deep .el-input input[type="number"]::-webkit-inner-spin-button,
+  ::v-deep .el-input input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  ::v-deep .el-input .el-input__inner {
+    padding-left: 5px; /* 文本颜色 */
+    font-size: 0.18rem;
+  }
   @media (max-width: 480px) {
     .sticky-button {
       display: block !important;
@@ -1011,7 +1021,7 @@ export default {
       // display: flex;
       position: relative;
       padding-right: 0.5rem;
-      border: 1px solid #fca73e;
+      border: 1px solid #e3e3e3;
     }
   }
   .input-pin__mask {
