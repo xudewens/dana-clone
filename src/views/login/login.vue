@@ -2,7 +2,7 @@
  * @Author: xiejun xiejun@keeprisk.com
  * @Date: 2025-05-22 15:04:20
  * @LastEditors: xiejun xiejun@keeprisk.com
- * @LastEditTime: 2025-05-27 15:23:23
+ * @LastEditTime: 2025-05-27 16:36:32
  * @FilePath: /dana-clone/src/views/minerMail/minerMail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -193,7 +193,12 @@
                 <div class="agreement__button-info">
                   Your data is secured by DANA Protection.
                 </div>
-                <el-button style="width: 100%;"  type="primary" @click="pcContinue">CONTINUE</el-button>
+                <el-button
+                  style="width: 100%"
+                  type="primary"
+                  @click="pcContinue"
+                  >CONTINUE</el-button
+                >
                 <!-- <button
                   type="button"
                   class="btn-continue fs-unmask btn btn-primary"
@@ -281,7 +286,7 @@
     <HelpDrawer ref="helpDrawerRef" :type="DrawerType"> </HelpDrawer>
     <PinCodeDrawer
       :visible.sync="showActionDrawer"
-      :size="'40%'"
+      :size="showKeyboard ? '80%' : '40%'"
       ref="pinCodeRef"
     >
       <div class="pin_code_container">
@@ -294,6 +299,14 @@
             :mask="hasMask"
             @focus="showKeyboard = true"
             :class="{ show_dot: hasMask }"
+          />
+          <!-- 数字键盘 -->
+          <van-number-keyboard
+            @input="onInput"
+            @delete="onDelete"
+            :show="showKeyboard"
+            @blur="showKeyboard = false"
+            :hide-on-click-outside="false"
           />
           <div class="input-pin__mask" @click="changeMask">
             <img
@@ -319,13 +332,6 @@
         >
           FORGOT PIN?
         </el-button>
-        <!-- 数字键盘 -->
-        <!-- <van-number-keyboard
-          :show="showKeyboard"
-          @input="onInput"
-          @delete="onDelete"
-          @blur="showKeyboard = false"
-        /> -->
       </div>
     </PinCodeDrawer>
   </div>
@@ -359,6 +365,18 @@ export default {
     document.removeEventListener("click", this.handleDocumentClick);
   },
   methods: {
+    onInput(key) {
+      this.password = (this.password + key).slice(0, 6);
+
+      console.log(
+        "%c [  ]-370",
+        "font-size:13px; background:pink; color:#bf2c9f;",
+        this.password
+      );
+    },
+    onDelete() {
+      this.password = this.password.slice(0, this.password.length - 1);
+    },
     changeMask() {
       this.hasMask = !this.hasMask;
     },
@@ -818,40 +836,40 @@ export default {
   //     display: none !important;
   //   }
   // }
-/* 隐藏 Chrome、Safari、Edge 等 WebKit/Blink 内核浏览器的步进器 */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  appearance: none;
-  margin: 0;
-}
+  /* 隐藏 Chrome、Safari、Edge 等 WebKit/Blink 内核浏览器的步进器 */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
 
-/* 隐藏 Firefox 的步进器 */
-input[type="number"] {
-  -moz-appearance: textfield;
-}
+  /* 隐藏 Firefox 的步进器 */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 
-/* 隐藏 IE/Edge 的步进器 */
-input[type="number"]::-ms-clear,
-input[type="number"]::-ms-reveal {
-  display: none;
-}
+  /* 隐藏 IE/Edge 的步进器 */
+  input[type="number"]::-ms-clear,
+  input[type="number"]::-ms-reveal {
+    display: none;
+  }
 
-/* 针对 Element UI 的输入框组件 */
-::v-deep .el-input input[type="number"]::-webkit-inner-spin-button,
-::v-deep .el-input input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-::v-deep .el-input::placeholder {
-  color: #999;         /* 文本颜色 */
-  font-size: 30px;      /* 字号 */
-  /* 其他样式属性 */
-}
-::v-deep .el-input .el-input__inner {
-  padding-left: 5px;         /* 文本颜色 */
-  font-size: 0.18rem;  
-}
+  /* 针对 Element UI 的输入框组件 */
+  ::v-deep .el-input input[type="number"]::-webkit-inner-spin-button,
+  ::v-deep .el-input input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  ::v-deep .el-input::placeholder {
+    color: #999; /* 文本颜色 */
+    font-size: 30px; /* 字号 */
+    /* 其他样式属性 */
+  }
+  ::v-deep .el-input .el-input__inner {
+    padding-left: 5px; /* 文本颜色 */
+    font-size: 0.18rem;
+  }
   @media (max-width: 480px) {
     .sticky-button {
       display: block !important;
@@ -994,6 +1012,9 @@ input[type="number"]::-ms-reveal {
       transform: translate(-50%, -50%);
       visibility: visible;
     }
+  }
+  ::v-deep .van-password-input__security i {
+    z-index: 1;
   }
   ::v-deep .show_dot .van-password-input__cursor {
     display: none;
