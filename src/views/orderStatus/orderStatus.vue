@@ -33,6 +33,7 @@
     </div> <img alt="dana-protection" src="https://a.m.dana.id/resource/imgs/ipg/dana-protection-logo-in-line.svg" class="dana-protection__img"></div> <div class="help"><button class="btn-help help__button">
       HELP
       <img alt="help" src="https://a.m.dana.id/resource/icons/help-blue.svg" class="help__icon"></button></div></div></div></div></div></div>
+      <Footer></Footer>
   </div>
 </template>
 <script>
