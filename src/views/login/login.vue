@@ -93,10 +93,10 @@
               <!---->
               <!---->
               <div class="agreement__phone-wrapper">
-                <div class="input-phone-header">
+                <div class="input-phone-header" :class="{ 'error-msg': inputError }">
                   Input your phone number as DANA ID
                 </div>
-                <div class="input-phone-wrapper">
+                <div class="input-phone-wrapper" :class="{ 'error-msg': inputError }" >
                   <div class="country-flag-wrapper">
                     <img
                       src="https://a.m.dana.id/resource/imgs/ipg/idn-flag.svg"
@@ -104,17 +104,18 @@
                     />
                   </div>
                   <div class="country-code-wrapper">
-                    <span style="padding-left: 6px; display: inline-block"
+                    <span :class="{ 'error-msg': inputError }" style="padding-left: 6px; display: inline-block"
                       >+62</span
                     >
                   </div>
                   <el-input
                     placeholder="12312345678"
                     v-model="inputValue"
-                    @focus="handleFocus"
-                    @blur="handleBlur"
                     clearable
                     type="number"
+                    :pattern="phonePattern"
+                    @input="validatePhone"
+                    :class="{ 'error-msg': inputError }"
                     ref="mainInput"
                   >
                     <!-- 解决部分机型数字键盘不唤起的兼容方案 -->
@@ -126,6 +127,10 @@
                       />
                     </template>
                   </el-input>
+                </div>
+                <div class="input-phone-error" v-if="inputError">
+                  <img src="https://a.m.dana.id/resource/icons/info-red.svg" alt="info-red">
+                  <span>Invalid phone number format. Please try again.</span>
                 </div>
                 <!---->
               </div>
@@ -328,6 +333,7 @@
         /> -->
       </div>
     </PinCodeDrawer>
+    <Footer></Footer>
   </div>
 </template>
 
@@ -348,21 +354,26 @@ export default {
       showKeyboard: false,
       hasMask: true,
       DrawerType: "help",
+      inputError: false,
+      errorMessage: '',
+      // 正则表达式：第一位为8，总长度10-13位（符合印尼手机号格式）
+      phonePattern: '^8\\d{9,12}$',
     };
   },
   mounted() {
-    // 监听全局点击事件（处理空白处失焦）
-    document.addEventListener("click", this.handleDocumentClick);
+
   },
   beforeUnmount() {
-    // 移除全局事件监听
-    document.removeEventListener("click", this.handleDocumentClick);
+
   },
   methods: {
     changeMask() {
       this.hasMask = !this.hasMask;
     },
     mobileContinue() {
+      if (this.inputError) {
+        return
+      }
       console.log(
         "%c [ 唤起弹窗 ]-311",
         "font-size:13px; background:pink; color:#bf2c9f;",
@@ -371,6 +382,9 @@ export default {
       this.showActionDrawer = true;
     },
     pcContinue() {
+      if (this.inputError) {
+        return
+      }
       console.log(
         "%c [ 跳转pc pin码 ]-315",
         "font-size:13px; background:pink; color:#bf2c9f;"
@@ -380,33 +394,33 @@ export default {
       this.DrawerType = type;
       this.$refs.helpDrawerRef.showDrawer = true;
     },
-    // 聚焦时处理
-    handleFocus() {
-      // 唤起数字键盘（强制触发假输入框聚焦）
-      this.$refs.fakeInput.focus();
-      // 延迟滚动（避免键盘遮挡导致滚动失效）
-      setTimeout(() => {
-        window.scrollBy(0, 50);
-      }, 100);
-    },
-
-    // 失焦时处理（包括主动失焦和空白点击）
-    handleBlur() {
-      // 先关闭键盘（确保键盘已收起）
-      this.$refs.mainInput.blur(); // 主动触发失焦
-      this.$refs.fakeInput.blur(); // 关闭假输入框键盘
-
-      // 延迟滚动到顶部（等待键盘动画结束）
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 300); // 延迟时间需根据键盘动画时长调整（通常200-300ms）
-    },
-
-    // 空白处点击处理
-    handleDocumentClick(event) {
-      // 判断点击位置是否在输入框外
-      if (!this.$refs.mainInput.$el.contains(event.target)) {
-        this.handleBlur(); // 触发失焦逻辑
+   // 实时验证手机号
+   validatePhone(value) {
+      // 清理输入：只保留数字
+      let cleanedValue = value.replace(/\D/g, '');
+      
+      // 限制长度不超过13位
+      if (cleanedValue.length > 13) {
+        cleanedValue = cleanedValue.substring(0, 13);
+      }
+      
+      // 更新输入值
+      this.inputValue = cleanedValue;
+      
+      // 验证正则
+      const regex = new RegExp(this.phonePattern);
+      if (cleanedValue && !regex.test(cleanedValue)) {
+        // 提供详细的错误信息
+        if (cleanedValue[0] === '0') {
+          this.errorMessage = '第一位不能为0';
+        } else if (cleanedValue[0] !== '8') {
+          this.errorMessage = '印尼手机号需以8开头';
+        } else if (cleanedValue.length < 10) {
+          this.errorMessage = '长度至少10位';
+        }
+        this.inputError = true;
+      } else {
+        this.inputError = false;
       }
     },
   },
@@ -770,6 +784,34 @@ export default {
         }
       }
     }
+    .error-msg,
+    .error-msg ::v-deep .el-input .el-input__inner {
+        color: #ff5d55 !important;
+    }
+    .error-msg.input-phone-wrapper {
+      border-color: #ff5d55 !important;
+    }
+    .error-msg {
+        border-color: #ff5d55 !important;
+    }
+    .agreement__phone-wrapper .input-phone-error {
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        color: #ff5d55;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        margin-top: .14rem;
+    }
+    .agreement__phone-wrapper .input-phone-error img {
+        height: .2rem;
+        width: .2rem;
+    }
+    .agreement__phone-wrapper .input-phone-error span {
+        font-size: .12rem;
+        margin-left: .06rem;
+    }
     .ipg-new__wrapper {
       background-image: url(https://a.m.dana.id/resource/imgs/ipg/dot-background.svg);
       background-repeat: no-repeat;
@@ -842,11 +884,6 @@ input[type="number"]::-ms-reveal {
 ::v-deep .el-input input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-::v-deep .el-input::placeholder {
-  color: #999;         /* 文本颜色 */
-  font-size: 30px;      /* 字号 */
-  /* 其他样式属性 */
 }
 ::v-deep .el-input .el-input__inner {
   padding-left: 5px;         /* 文本颜色 */
