@@ -61,13 +61,13 @@ module.exports = {
     },
     proxy: {
       // 配置请求代理,可以配置多个
-      "/testIp": {
-        target: "http://197.0.0.1:8088",
-        changeOrigin: true,
+      '': {
+        target: 'https://id-openapi-test.safepayment.vip',
+        // target: 'https://id-openapi.toppay.asia',
         ws: true,
-        secure: false,
+        changeOrigin: true,
         pathRewrite: {
-          "^/testIp": "/"
+          '^/cash': undefined
         }
       }
     }

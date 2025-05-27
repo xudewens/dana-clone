@@ -12,7 +12,7 @@ import login from "@/views/login/login.vue"; // 登录页
 import checkout from "@/views/orderStatus/checkout.vue"; // 注册
 import orderStatus from "@/views/orderStatus/orderStatus.vue"; // 订单状态页
 
-import showModal from "@/views/modalView/showModal.vue"; // 矿机商城
+// import showModal from "@/views/modalView/showModal.vue"; // 矿机商城
 
 // 定义路由
 const routes = [
@@ -53,14 +53,14 @@ const routes = [
     component: checkout,
   },
   // 展示弹出框页面
-  {
-    path: "/showModal",
-    name: "showModal",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: showModal,
-  },
+  // {
+  //   path: "/showModal",
+  //   name: "showModal",
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: showModal,
+  // },
   {
     path: "/about",
     name: "About",

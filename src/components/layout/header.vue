@@ -45,11 +45,11 @@ export default {};
   }
   .content-left {
     float: left;
-    height: 0.3rem;
+    height: 0.4rem;
     margin-left: 0.32rem;
     position: relative;
-    top: 0.21rem;
-    width: 1rem;
+    top: 0.17rem;
+    width: 1.2rem;
     // background-color: aliceblue;
 
     // .icon{

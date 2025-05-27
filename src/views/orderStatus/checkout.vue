@@ -31,9 +31,7 @@
                     <img alt="dana-protection" src="https://a.m.dana.id/resource/imgs/ipg/dana-protection-logo-small.svg" class="card-title__dana-protection">
                     <div class="card-title__title-wrapper">
                       <span class="card-title__dana-logo icon icon-dana">
-                      <svg>
-                        <!-- <use xlink:href="#icon-dana"></use> -->
-                      </svg>
+                        <img style="width: .18rem;" src="https://a.m.dana.id/resource/icons/dana.svg" alt="dana-logo" class="wrapper__step__logo">
                     </span>
                   <div class="card-title__text"> PAY </div>
                 </div>
@@ -45,22 +43,17 @@
             <div class="payment-modifier-card__content">
               <p class="payment-modifier-card__content__title payment-method"> Payment Method</p> <div class="payment-selector">
                 <div class="payment-selector__guide">
-                  <div class="payment-selector__guide__wrapper">
-                    <button type="button" class="payment-selector__guide__toggle-btn f-btn f-btn-pills f-btn-small">CHANGE</button>
-                    <div class="icon__wrapper">
-                      <img src="https://a.m.dana.id/resource/imgs/ipg/wallet-blue.svg" alt="wallet-blue" class="payment-selector__guide__icon">
+                    <div class="balance">
+                        <img src="https://a.m.dana.id/resource/icons/dana.svg" alt="dana-logo" class="wrapper__step__logo">
+                        <div class="label-wrapper">
+                            <div class="balance-card-wrapper__title lbl-dana-balance-method">
+                                DANA Balance
+                            </div>
+                            <div class="label-wrapper__amount amount-insufficient">
+                            Rp15.000
+                            </div>
+                        </div>
                     </div>
-                    <div class="payment-selector__guide__selected closed"><div class="payment-selector__guide__selected__type">
-
-                    </div>
-                    <div class="payment-selector__guide__selected__info">
-                      <span>Select payment method</span>
-                    </div>
-                  </div>
-                  <section class="tooltip">
-                    <div class="f-dialog"></div>
-                  </section>
-                </div>
               </div>
                 <section class="payment-selector__installment-container">
                   <div class="payment-installment-list show-mobile" style="display: none;">
@@ -78,9 +71,7 @@
             <div class="payment-amount-wrapper">
               <div class="header">
                 <span class="header__dana-logo icon icon-dana">
-                <svg>
-                  <!-- <use xlink:href="#icon-dana"></use> -->
-                </svg>
+                    <img style="width: .28rem;" src="https://a.m.dana.id/resource/icons/dana.svg" alt="dana-logo" class="wrapper__step__logo">
               </span>
               <div class="header__title"> PAY </div>
             </div>
@@ -179,9 +170,7 @@
             <img alt="dana-protection" src="https://a.m.dana.id/resource/imgs/ipg/dana-protection-logo-small.svg" class="card-title__dana-protection">
             <div class="card-title__title-wrapper">
                 <span class="card-title__dana-logo icon icon-dana">
-                    <svg>
-                    <!-- <use xlink:href="#icon-dana"></use> -->
-                    </svg>
+                    <img style="width: .18rem;" src="https://a.m.dana.id/resource/icons/dana.svg" alt="dana-logo" class="wrapper__step__logo">
                 </span>
                 <div class="card-title__text"> PAY </div>
             </div>
@@ -212,7 +201,6 @@
     </div>
     </el-drawer>
   </div>
-
 </template>
 <script>
 export default {
@@ -910,6 +898,39 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
     height: .42rem;
     line-height: .18rem;
     text-align: center;
+}
+.balance {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding: .12rem .16rem;
+    .wrapper__step__logo {
+        margin-right: .1rem;
+    }
+}
+.balance-card-wrapper .dana-logo, .dana-wallet-card-wrapper .dana-logo {
+    height: .24rem;
+    margin-right: .12rem;
+    width: .36rem;
+}
+.balance-card-wrapper__title, .dana-wallet-card-wrapper__title {
+    color: #727272;
+    font-size: .12rem;
+    font-weight: 400;
+    line-height: .16rem;
+    margin-bottom: .04rem;
+}
+.balance-card-wrapper .label-wrapper__amount.amount-insufficient {
+    color: #727272;
+}
+.balance-card-wrapper .label-wrapper__amount {
+    color: #313131;
+    font-size: .16rem;
+    font-weight: 400;
+    line-height: .2rem;
 }
 @media (max-width: 1024px) {
     .footer {

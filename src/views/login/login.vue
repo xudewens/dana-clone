@@ -193,9 +193,15 @@
                 <div class="agreement__button-info">
                   Your data is secured by DANA Protection.
                 </div>
-                <el-button type="primary" @click="pcContinue"
-                  >CONTINUE</el-button
+                <el-button style="width: 100%;"  type="primary" @click="pcContinue">CONTINUE</el-button>
+                <!-- <button
+                  type="button"
+                  class="btn-continue fs-unmask btn btn-primary"
+                  disabled="disabled"
                 >
+                  
+                CONTINUE
+                </button> -->
                 <div
                   class="agreement__button-redirect btn-back-to-merchant"
                   style="display: none"
@@ -656,7 +662,7 @@ export default {
                 color: #313131;
               }
 
-              .binding-feature-wrapper .binding-feature__item__content__desc {
+              .binding-feature__item__content__desc {
                 font-weight: 400;
                 font-size: 0.12rem;
                 line-height: 0.16rem;
@@ -681,7 +687,8 @@ export default {
                 font-size: 0.12rem;
                 font-weight: 400;
                 line-height: 0.16rem;
-                margin: 0.09rem 0 0.08rem;
+                padding: 0.09rem 0 0.08rem;
+                border-top: 0.01rem solid #d1d1d1;
                 text-align: center;
               }
               .agreement__button-redirect {
@@ -811,6 +818,40 @@ export default {
   //     display: none !important;
   //   }
   // }
+/* 隐藏 Chrome、Safari、Edge 等 WebKit/Blink 内核浏览器的步进器 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* 隐藏 Firefox 的步进器 */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* 隐藏 IE/Edge 的步进器 */
+input[type="number"]::-ms-clear,
+input[type="number"]::-ms-reveal {
+  display: none;
+}
+
+/* 针对 Element UI 的输入框组件 */
+::v-deep .el-input input[type="number"]::-webkit-inner-spin-button,
+::v-deep .el-input input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+::v-deep .el-input::placeholder {
+  color: #999;         /* 文本颜色 */
+  font-size: 30px;      /* 字号 */
+  /* 其他样式属性 */
+}
+::v-deep .el-input .el-input__inner {
+  padding-left: 5px;         /* 文本颜色 */
+  font-size: 0.18rem;  
+}
   @media (max-width: 480px) {
     .sticky-button {
       display: block !important;
@@ -839,6 +880,7 @@ export default {
     .agreement__wrapper .card-agreement {
       z-index: 10;
       margin-top: -1.2rem;
+      margin-bottom: 1.4rem !important;
       width: calc(100vw - 0.24rem);
     }
     .card-agreement__guest-header .icon-dana {
