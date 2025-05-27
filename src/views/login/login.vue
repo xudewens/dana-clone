@@ -937,6 +937,9 @@ input[type="number"]::-ms-reveal {
       line-height: 0.16rem;
       text-align: center;
     }
+    .card-agreement__footer {
+      display: none;
+    }
   }
   ::v-deep .pin_code_container {
     background-color: #fff;
