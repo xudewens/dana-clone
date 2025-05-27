@@ -2,9 +2,11 @@
   <div class="footer">
     <div class="left-content">
       <span class="logo icon icon-logodana">
-        <svg>
-          <!-- <use xlink:href="#icon-logodana"></use> -->
-        </svg>
+        <img
+            alt="logo-dana-protection"
+            src="../assets/dana-icon/DANA.png"
+            class="logo"
+          />
       </span>
       <div class="footer__notes">
         <div class="footer__container">
