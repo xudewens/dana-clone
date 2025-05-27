@@ -18,8 +18,32 @@
     @close="handleClose"
     @closed="handleClosed"
   >
-    <!-- 默认插槽用于放置主要内容 -->
-    <slot></slot>
+    <div class="in-page-risk-sheet__header">
+      <div class="dana-protection-logo">
+        <img
+          src="https://a.m.dana.id/resource/imgs/ipg/dana-protection-full.svg"
+          alt="dana-protection"
+        />
+      </div>
+      <div class="help-grey">
+        <div class="help-grey__text">Help</div>
+        <img
+          src="https://a.m.dana.id/resource/imgs/cashier/help-icon-small-grey.svg"
+          alt="help"
+        />
+      </div>
+    </div>
+    <div class="in-page-risk-sheet__content">
+      <div
+        class="in-page-risk-sheet__content__top"
+        @click="drawerVisible = false"
+      >
+        <i class="el-icon-arrow-left chevron"></i>
+        <div class="title">Verification Process</div>
+      </div>
+      <!-- 默认插槽用于放置主要内容 -->
+      <slot></slot>
+    </div>
 
     <!-- 底部插槽用于放置底部按钮等 -->
     <div v-if="$slots.footer" slot="footer" class="drawer-footer">
@@ -30,7 +54,7 @@
 
 <script>
 export default {
-  name: "customerDrawer",
+  name: "actionDrawer",
   props: {
     // 是否显示抽屉
     visible: {
@@ -148,7 +172,57 @@ export default {
 ::v-deep .el-drawer {
   border-radius: 0.07rem 0.07rem 0 0;
 }
-// ::v-deep .el-drawer__header {
-//   display: none;
-// }
+.in-page-risk-sheet__header {
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 0.07rem;
+  padding: 0.12rem 0.11rem;
+}
+.dana-protection-logo img {
+  height: 0.2rem;
+}
+.help-grey img {
+  height: 0.11rem;
+  width: 0.11rem;
+}
+.help-grey {
+  align-items: center;
+  border: 1px solid #e3e3e3;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  display: flex;
+  gap: 0.05rem;
+  height: 0.24rem;
+  justify-content: center;
+  width: 0.78rem;
+}
+.help-grey__text {
+  color: #939393;
+  font-size: 0.12rem;
+  font-weight: 600;
+  line-height: 0.16rem;
+}
+.in-page-risk-sheet__content__top {
+  align-items: center;
+  background: #108ee9;
+  color: #fff;
+  position: relative;
+  padding: 0.11rem 0.08rem;
+}
+.in-page-risk-sheet__content__top .chevron {
+  font-size: 0.25rem;
+  //   transform: rotate(180deg);
+  position: absolute;
+  top: 0.08rem;
+  left: 0;
+}
+.in-page-risk-sheet__content__top .title {
+  font-size: 0.14rem;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
 </style>

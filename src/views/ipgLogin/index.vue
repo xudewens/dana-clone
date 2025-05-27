@@ -2,7 +2,7 @@
  * @Author: xiejun xiejun@keeprisk.com
  * @Date: 2025-05-22 15:04:20
  * @LastEditors: xiejun xiejun@keeprisk.com
- * @LastEditTime: 2025-05-27 15:23:23
+ * @LastEditTime: 2025-05-27 10:38:21
  * @FilePath: /dana-clone/src/views/minerMail/minerMail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -193,9 +193,15 @@
                 <div class="agreement__button-info">
                   Your data is secured by DANA Protection.
                 </div>
-                <el-button type="primary" @click="pcContinue"
-                  >CONTINUE</el-button
+                <el-button type="primary">CONTINUE</el-button>
+                <!-- <button
+                  type="button"
+                  class="btn-continue fs-unmask btn btn-primary"
+                  disabled="disabled"
                 >
+                  
+                CONTINUE
+                </button> -->
                 <div
                   class="agreement__button-redirect btn-back-to-merchant"
                   style="display: none"
@@ -238,9 +244,15 @@
               <div class="sticky-button__content__tnc">
                 Your data is secured by DANA Protection.
               </div>
-              <el-button type="primary" @click="mobileContinue"
-                >CONTINUE</el-button
+              <el-button type="primary">CONTINUE</el-button>
+
+              <!-- <button
+                type="button"
+                class="btn-continue btn btn-primary"
+                disabled="disabled"
               >
+                CONTINUE
+              </button> -->
               <div>
                 <div class="guest-checkout-footer">
                   <div class="dana-protection__wrapper">
@@ -252,10 +264,7 @@
                     />
                   </div>
                   <div class="help">
-                    <button
-                      class="btn-help help__button"
-                      @click="handleDrawer('help')"
-                    >
+                    <button class="btn-help help__button" @click="handleHelp">
                       HELP
                       <img
                         alt="help"
@@ -272,76 +281,20 @@
         </div>
       </div>
     </div>
-    <HelpDrawer ref="helpDrawerRef" :type="DrawerType"> </HelpDrawer>
-    <PinCodeDrawer
-      :visible.sync="showActionDrawer"
-      :size="'40%'"
-      ref="pinCodeRef"
-    >
-      <div class="pin_code_container">
-        <div class="title">Enter your DANA PIN</div>
-        <div class="password_input">
-          <!-- 密码输入框 -->
-          <van-password-input
-            :value="password"
-            :focused="showKeyboard"
-            :mask="hasMask"
-            @focus="showKeyboard = true"
-            :class="{ show_dot: hasMask }"
-          />
-          <div class="input-pin__mask" @click="changeMask">
-            <img
-              v-if="hasMask"
-              data-v-554f031f=""
-              src="https://a.m.dana.id/resource/imgs/ipg/unmask-pin.svg"
-              alt="show/hide"
-              class=""
-            />
-            <img
-              v-else
-              data-v-554f031f=""
-              src="https://a.m.dana.id/resource/imgs/ipg/mask-pin.svg"
-              alt="show/hide"
-              class="masked"
-            />
-          </div>
-        </div>
-        <el-button
-          style="width: 100%"
-          type="text"
-          @click="handleDrawer('forget')"
-        >
-          FORGOT PIN?
-        </el-button>
-        <!-- 数字键盘 -->
-        <!-- <van-number-keyboard
-          :show="showKeyboard"
-          @input="onInput"
-          @delete="onDelete"
-          @blur="showKeyboard = false"
-        /> -->
-      </div>
-    </PinCodeDrawer>
+    <HelpDrawer ref="helpDrawerRef" type="help"> </HelpDrawer>
   </div>
 </template>
 
 <script>
-import PinCodeDrawer from "@/components/common/actionDrawer.vue";
 import HelpDrawer from "@/components/helpDrawer/index.vue";
 
 export default {
   components: {
     HelpDrawer,
-    PinCodeDrawer,
   },
   data() {
     return {
       inputValue: "",
-      showActionDrawer: false,
-      password: "",
-      showKeyboard: false,
-      hasMask: true,
-      DrawerType: "help",
     };
   },
   mounted() {
@@ -353,25 +306,7 @@ export default {
     document.removeEventListener("click", this.handleDocumentClick);
   },
   methods: {
-    changeMask() {
-      this.hasMask = !this.hasMask;
-    },
-    mobileContinue() {
-      console.log(
-        "%c [ 唤起弹窗 ]-311",
-        "font-size:13px; background:pink; color:#bf2c9f;",
-        this.$refs.pinCodeRef
-      );
-      this.showActionDrawer = true;
-    },
-    pcContinue() {
-      console.log(
-        "%c [ 跳转pc pin码 ]-315",
-        "font-size:13px; background:pink; color:#bf2c9f;"
-      );
-    },
-    handleDrawer(type) {
-      this.DrawerType = type;
+    handleHelp() {
       this.$refs.helpDrawerRef.showDrawer = true;
     },
     // 聚焦时处理
@@ -817,17 +752,8 @@ export default {
     }
     .wrapper,
     .agreement__button,
-    .agreement__footer,
-    .card-agreement__footer {
+    .agreement__footer {
       display: none !important;
-    }
-    .agreement__wrapper {
-      flex-direction: column;
-      // background-image: url(https://a.m.dana.id/resource/imgs/ipg/dot-background.svg);
-      // background-repeat: no-repeat;
-      // background-size: cover;
-      margin: 0 auto;
-      min-height: 8.5rem;
     }
     .mobile-overlap-background__top {
       width: 100%;
@@ -896,91 +822,5 @@ export default {
       text-align: center;
     }
   }
-  ::v-deep .pin_code_container {
-    background-color: #fff;
-    padding: 0.24rem 0.36rem;
-    .title {
-      color: #727272;
-      font-weight: 400;
-      font-size: 0.12rem;
-      line-height: 0.16rem;
-      margin-bottom: 0.16rem;
-      text-align: center;
-    }
-    .password_input {
-      // display: flex;
-      position: relative;
-      padding-right: 0.5rem;
-      border: 1px solid #fca73e;
-    }
-  }
-  .input-pin__mask {
-    border-left: 0.01rem solid #e3e3e3;
-    margin: 0.06rem;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .input-pin__mask img {
-    cursor: pointer;
-    height: 0.16rem;
-    margin: 0.1rem;
-    width: 0.2rem;
-  }
-  ::v-deep.van-password-input {
-    margin: 0;
-  }
-  [class*="van-hairline"]::after {
-    border: 0 solid #ebedf0;
-  }
-  ::v-deep .show_dot .van-password-input__item {
-    position: relative; /* 必须设置relative以便absolute伪元素定位 */
-
-    &::after {
-      content: ""; /* 伪元素必需属性 */
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 10px;
-      height: 10px;
-      background-color: #e3e3e3;
-      border-radius: 100%;
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-      visibility: visible;
-    }
-  }
-  ::v-deep .show_dot .van-password-input__cursor {
-    display: none;
-  }
-  ::v-deep .show_dot .van-password-input__cursor {
-    bottom: 20%;
-    width: 40%;
-    height: 1px;
-  }
-  // ::v-deep .van-password-input__item  {
-  //   position: absolute;
-  //   top: 50%;
-  //   left: 50%;
-  //   width: 10px;
-  //   height: 10px;
-  //   background-color: #e3e3e3;
-  //   border-radius: 100%;
-  //   -webkit-transform: translate(-50%, -50%);
-  //   transform: translate(-50%, -50%);
-  //   visibility: visible;
-  // }
-  // ::v-deep .van-password-input__security i {
-  //   position: absolute;
-  //   top: 50%;
-  //   left: 50%;
-  //   width: 10px;
-  //   height: 10px;
-  //   background-color: #000;
-  //   border-radius: 100%;
-  //   -webkit-transform: translate(-50%, -50%);
-  //   transform: translate(-50%, -50%);
-  //   visibility: visible;
-  // }
 }
 </style>

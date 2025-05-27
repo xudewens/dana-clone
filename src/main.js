@@ -1,11 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-04-22 22:41:33
- * @LastEditTime: 2025-05-23 14:35:07
+ * @LastEditTime: 2025-05-27 14:29:28
  * @LastEditors: xiejun xiejun@keeprisk.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /htmlTemplete/Users/jiwenjie/Desktop/codeWorkSpace/VsCodeSpace/do-it-myself/vue-project-base/src/main.js
  */
+// import { NumberKeyboard, PasswordInput } from "vant";
+import Vant from "vant";
+import "vant/lib/index.css";
 import Vue from "vue";
 import App from "./App.vue";
 import "./registerServiceWorker";
@@ -24,13 +27,18 @@ import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 Vue.use(Antd);
 
+//按需引入vant组件
+// Vue.use(PasswordInput);
+// Vue.use(NumberKeyboard);
+Vue.use(Vant);
+
 import i18n from "./i18n"; // 引入语言国际化设置
 
 // 换肤可以在此处引入不同的样式文件内容
-import './style/reset.scss'; // 引入部分 reset 样式内容
-import Footer from './components/footer.vue'
-Vue.component('Footer', Footer) // 全局国家选择组件
-Vue.use(Footer)
+import Footer from "./components/footer.vue";
+import "./style/reset.scss"; // 引入部分 reset 样式内容
+Vue.component("Footer", Footer); // 全局国家选择组件
+Vue.use(Footer);
 // 引入 echarts
 import echarts from "echarts";
 Vue.prototype.$echarts = echarts;
