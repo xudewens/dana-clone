@@ -10,6 +10,7 @@
   <div>
     <CustomerDrawer
       :visible.sync="showDrawer"
+      :size="'50%'"
       @open="handleOpen"
       @close="handleClose"
     >
@@ -121,6 +122,14 @@ export default {
   padding: 0.12rem 0.16rem 0;
   text-align: center;
 }
+.help-core__header {
+  display: flex;
+  justify-content: center;
+   img {
+    // width: 50%;
+  }
+}
+
 .help-core__button {
   background-color: #108ee9;
   border: 0;
@@ -132,7 +141,7 @@ export default {
   padding: 0.16rem;
   width: 100%;
 }
-@media (max-width: 480px) {
+// @media (max-width: 480px) {
   .help-core__title {
     font-size: 0.2rem;
     line-height: 0.26rem;
@@ -145,6 +154,11 @@ export default {
   }
   .help-core__button-container {
     padding: 0 0.17rem 0.2rem;
+  }
+// }
+@media (min-width: 600px) { 
+  .help-core__header img{
+    width: 50%;
   }
 }
 </style>

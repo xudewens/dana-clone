@@ -1,23 +1,24 @@
 <template>
-  <el-drawer
-    :title="title"
-    :visible.sync="drawerVisible"
-    direction="btt"
-    :size="size"
-    :wrapperClosable="wrapperClosable"
-    :show-close="showClose"
-    :before-close="handleBeforeClose"
-    :modal="modal"
-    :modal-append-to-body="modalAppendToBody"
-    :append-to-body="appendToBody"
-    :custom-class="customClass"
-    :with-header="hasHeader"
-    :close-on-press-escape="closeOnPressEscape"
-    @open="handleOpen"
-    @opened="handleOpened"
-    @close="handleClose"
-    @closed="handleClosed"
-  >
+  <div>
+      <el-drawer
+      :title="title"
+      :visible.sync="drawerVisible"
+      direction="btt"
+      :size="size"
+      :wrapperClosable="wrapperClosable"
+      :show-close="showClose"
+      :before-close="handleBeforeClose"
+      :modal="modal"
+      :modal-append-to-body="modalAppendToBody"
+      :append-to-body="appendToBody"
+      :custom-class="customClass"
+      :with-header="hasHeader"
+      :close-on-press-escape="closeOnPressEscape"
+      @open="handleOpen"
+      @opened="handleOpened"
+      @close="handleClose"
+      @closed="handleClosed"
+    >
     <div class="in-page-risk-sheet__header">
       <div class="dana-protection-logo">
         <img
@@ -25,7 +26,7 @@
           alt="dana-protection"
         />
       </div>
-      <div class="help-grey">
+      <div class="help-grey" @click="handleDrawer('help')">
         <div class="help-grey__text">Help</div>
         <img
           src="https://a.m.dana.id/resource/imgs/cashier/help-icon-small-grey.svg"
@@ -50,11 +51,17 @@
       <slot name="footer"></slot>
     </div>
   </el-drawer>
+  <HelpDrawer ref="helpDrawerRef" :type="DrawerType"></HelpDrawer>
+  </div>
 </template>
 
 <script>
+import HelpDrawer from "@/components/helpDrawer/index.vue";
 export default {
   name: "actionDrawer",
+    components: {
+      HelpDrawer
+    },
   props: {
     // 是否显示抽屉
     visible: {
@@ -120,6 +127,7 @@ export default {
   data() {
     return {
       drawerVisible: this.visible,
+      DrawerType: "help",
     };
   },
   watch: {
@@ -150,10 +158,15 @@ export default {
     // 关闭回调
     handleClose() {
       this.$emit("close");
+      console.log(1123111)
     },
     // 关闭动画结束时的回调
     handleClosed() {
       this.$emit("closed");
+    },
+    handleDrawer(type) {
+      this.DrawerType = type;
+      this.$refs.helpDrawerRef.showDrawer = true;
     },
   },
 };

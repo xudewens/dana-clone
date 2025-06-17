@@ -11,14 +11,14 @@ import ipgLogin from "@/views/ipgLogin/index.vue"; // pin登录
 import login from "@/views/login/login.vue"; // 登录页
 import checkout from "@/views/orderStatus/checkout.vue"; // 注册
 import orderStatus from "@/views/orderStatus/orderStatus.vue"; // 订单状态页
-
+import waitPayment from "@/views/waitPayment.vue"; // 订单状态页
 // import showModal from "@/views/modalView/showModal.vue"; // 矿机商城
 
 // 定义路由
 const routes = [
   {
     path: "/",
-    redirect: "/orderStatus",
+    redirect: "/waitPayment",
   },
   {
     path: "/ipgLogin",
@@ -43,6 +43,11 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: orderStatus,
+  },
+  {
+    path: "/waitPayment",
+    name: "waitPayment",
+    component: waitPayment,
   },
   {
     path: "/checkout",

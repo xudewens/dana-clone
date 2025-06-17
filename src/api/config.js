@@ -8,4 +8,4 @@
  */
 
 //判断开发环境
-export const baseUrl = process.env.NODE_ENV === "development" ? '/devApi' : '';
+export const baseUrl = process.env.NODE_ENV === "development" ? '' : '';

@@ -55,7 +55,7 @@ export default {
     // 抽屉大小
     size: {
       type: [String, Number],
-      default: "52%",
+      default: "56%",
     },
     // 是否可以通过点击 modal 关闭 Drawer
     wrapperClosable: {

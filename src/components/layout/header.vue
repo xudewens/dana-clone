@@ -36,7 +36,7 @@ export default {};
 
 <style lang="scss" scoped>
 .na-header-page {
-  box-shadow: 0 0.02rem 0.12rem -0.02rem rgba(0, 0, 0, 0.16);
+  // box-shadow: 0 0.02rem 0.12rem -0.02rem rgba(0, 0, 0, 0.16);
   position: relative;
   .header__header-box {
     background-color: #108ee9;

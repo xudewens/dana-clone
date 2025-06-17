@@ -14,31 +14,68 @@
     <div class="card-header-content">
       <div class="card-header-content__title lbl-failed-payment">
           Payment Failed
-        </div> <div class="card-header-content__message lbl-failed-payment-description"><span>Your payment is declined, as order is already closed</span></div> <div data-v-33ee4006="" class="phone-number-label phone-number-label"><div data-v-33ee4006="" class="avatar"><img data-v-33ee4006="" src="https://a.m.dana.id/resource/imgs/ipg/input-nickname-icon.svg" alt="avatar"></div> <div data-v-33ee4006="" class="phone-number">62-*******3140</div></div></div></div> <div class="result-card__content"><div class="result-card__content__header"><div class="header-order"><div class="order-id__title">Order ID</div> <div class="order-summary"><div class="order-summary__order-id"><div class="order-id__value lbl-order-id">e3e8f94c5caff64c30e35e8c94b8004a</div></div> <div class="order-summary__total-amount lbl-total-price coupon"><span>
-                Rp20.000
-              </span></div></div></div> <div class="content-mobile-wrapper"><div class="order-summary"><div class="order-id__title">
-              Total Price
-            </div> <div class="order-summary__total-amount lbl-total-price coupon"><span>
-                Rp20.000
-              </span></div></div> <div class="divider"></div> <div class="order-summary"><div class="order-id__title">
-              Order ID
-            </div> <div class="order-id__value">
-              e3e8f94c5caff64c30e35e8c94b8004a
-            </div></div></div><div class="divider"></div>  <div><!----> <div class="divider"></div> <div class="merchant-name"><div class="merchant-name__title">Merchant Name</div> <div class="merchant-name__value lbl-merchant-name">PT JAYA PERMATA ELEKTRO</div></div></div></div></div> <div class="spacer"></div> <div class="result-card__footer"><div class="button-wrapper"><button type="button" class="btn-close btn btn-ghost">
-          CLOSE
-       </button> <button type="button" class="btn-try-again btn btn-primary">
-          TRY AGAIN
-        </button></div> <div class="agreement-footer card-footer"><div class="dana-protection__wrapper"><div class="dana-protection__text">
-      Secured by
-    </div> <img alt="dana-protection" src="https://a.m.dana.id/resource/imgs/ipg/dana-protection-logo-in-line.svg" class="dana-protection__img"></div> <div class="help"><button class="btn-help help__button">
-      HELP
-      <img alt="help" src="https://a.m.dana.id/resource/icons/help-blue.svg" class="help__icon"></button></div></div></div></div></div></div>
+        </div> <div class="card-header-content__message lbl-failed-payment-description"><span>Your payment is declined, as order is already closed</span></div> <div data-v-33ee4006="" class="phone-number-label phone-number-label"><div data-v-33ee4006="" class="avatar"><img data-v-33ee4006="" src="https://a.m.dana.id/resource/imgs/ipg/input-nickname-icon.svg" alt="avatar"></div> <div data-v-33ee4006="" class="phone-number">62-{{ phoneNumber }}</div></div></div></div> 
+    
+        <div class="result-card__footer">
+            <div class="button-wrapper">
+                <button type="button" @click="close" class="btn-close btn btn-ghost">
+                    CLOSE
+                </button>
+                <button type="button" @click="close" class="btn-try-again btn btn-primary">
+                    BACK
+                </button>
+            </div>
+            <div class="agreement-footer card-footer">
+                <div class="dana-protection__wrapper">
+                    <div class="dana-protection__text">
+                        Secured by
+                    </div>
+                    <img alt="dana-protection" src="https://a.m.dana.id/resource/imgs/ipg/dana-protection-logo-in-line.svg" class="dana-protection__img">
+                </div>
+                <div class="help">
+                    <button class="btn-help help__button">
+                        HELP
+                        <img alt="help" src="https://a.m.dana.id/resource/icons/help-blue.svg" class="help__icon">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
       <Footer></Footer>
   </div>
 </template>
 <script>
+import { dana_detail } from '@/api/index'
 export default {
-
+    data() {
+        return {
+            drawer: false,
+            type:'FAILED',
+            referenceNo: '',
+            phoneNumber: ''
+        }
+    },
+    created() {
+        this.referenceNo = this.$route.query.referenceNo || ''
+    },
+    mounted() {
+        this.getOrderDetail()
+    },
+    methods: {
+        getOrderDetail() {
+            dana_detail({
+                referenceNo: this.referenceNo
+            }).then((res)=> {
+                this.phoneNumber = res.data.phoneNumber
+            }).finally(() => {
+            })
+        },
+        close() {
+            window.location.href = "about:blank"; // 标准空白页
+        }
+    }
 }
 </script>
 

